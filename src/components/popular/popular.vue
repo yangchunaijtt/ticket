@@ -45,20 +45,20 @@ export default {
           "label":"主题公园",
           "degree":"95"
         },
-        // {
-        //   "name": "常州恐龙园",
-        //   "img": "https://pics.lvjs.com.cn//uploads/pc/place2/2017-04-27/50a7584d-ea39-46e3-bbc7-340f9f566513_480_320.jpg",
-        //   "price": 24,
-        //   "label":"主题公园",
-        //   "degree":"95"
-        // },
-        // {
-        //   "name": "常州恐龙园",
-        //   "img": "https://pics.lvjs.com.cn//uploads/pc/place2/2017-04-27/50a7584d-ea39-46e3-bbc7-340f9f566513_480_320.jpg",
-        //   "price": 24,
-        //   "label":"主题公园",
-        //   "degree":"95"
-        // },
+        {
+          "name": "常州恐龙园",
+          "img": "https://pics.lvjs.com.cn//uploads/pc/place2/2017-04-27/50a7584d-ea39-46e3-bbc7-340f9f566513_480_320.jpg",
+          "price": 24,
+          "label":"主题公园",
+          "degree":"95"
+        },
+        {
+          "name": "常州恐龙园",
+          "img": "https://pics.lvjs.com.cn//uploads/pc/place2/2017-04-27/50a7584d-ea39-46e3-bbc7-340f9f566513_480_320.jpg",
+          "price": 24,
+          "label":"主题公园",
+          "degree":"95"
+        },
         // {
         //   "name": "常州恐龙园",
         //   "img": "https://pics.lvjs.com.cn//uploads/pc/place2/2017-04-27/50a7584d-ea39-46e3-bbc7-340f9f566513_480_320.jpg",

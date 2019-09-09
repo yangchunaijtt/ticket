@@ -2,8 +2,10 @@
   <div class="screen">
     <ul class="content">
       <li class="item"   v-for="(item, index) in screenData" >
-        <img :src="item.img" class="img" width="50" height="50">
-        <div class="name">{{item.name}}</div>
+        <router-link to="/tour" class="link">
+          <img :src="item.img" class="img" width="50" height="50">
+          <div class="name">{{item.name}}</div>
+        </router-link>
       </li>
     </ul>
   </div>
@@ -76,22 +78,26 @@ export default {
         width: 20%
         padding-top: 15px
         text-align: center
-        .img 
-          width: 43px
-          height: 43px
-          border-radius: 50%
-          background-image: linear-gradient(-70deg,#fc7197 0,#fb515e 100%),linear-gradient(#18a1f1,#18a1f1)
-          background-blend-mode: normal,normal
-          -webkit-box-shadow: 0 1px 7px 2px rgba(251,87,130,.5)
-          box-shadow: 0 1px 7px 2px rgba(251,87,130,.5)
-        .name 
+        .link
+          display: block
           width:100%
-          font-size: 13px
-          white-space: nowrap
-          text-overflow: ellipsis
-          overflow: hidden
-          padding-top: 5px
-          text-align:center
-          color:#333
+          height:100% 
+          .img 
+            width: 43px
+            height: 43px
+            border-radius: 50%
+            background-image: linear-gradient(-70deg,#fc7197 0,#fb515e 100%),linear-gradient(#18a1f1,#18a1f1)
+            background-blend-mode: normal,normal
+            -webkit-box-shadow: 0 1px 7px 2px rgba(251,87,130,.5)
+            box-shadow: 0 1px 7px 2px rgba(251,87,130,.5)
+          .name 
+            width:100%
+            font-size: 13px
+            white-space: nowrap
+            text-overflow: ellipsis
+            overflow: hidden
+            padding-top: 5px
+            text-align:center
+            color:#333
 </style>
 

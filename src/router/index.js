@@ -17,7 +17,7 @@ export default new Router({
     {
       path: '/',
       name: '/',
-      redirect:"/tour"
+      redirect:"/seachv"
     },
     {
       path: '/index',
