@@ -21,9 +21,9 @@
         </div>
       </li>
     </ul>
-    <div class="bottom">
+    <router-link to="" class="bottom">
       更多常州景点
-    </div>
+    </router-link>
   </div>
 </template>
 <script>
@@ -168,6 +168,7 @@ export default {
               font-size 16px
               color:#f40
     .bottom
+      display:block
       height: 40px
       line-height: 40px
       font-size: 14px

@@ -1,7 +1,7 @@
 <template>
   <div class="headers">
     <div class="bannner"></div>
-    <div class="content">
+    <div class="content"  :class="isScroll?'isscroll':'noscroll'">
       <div class="center clearfix">
         <div class="icon">
           <i class="iconfont iconzuo1"></i>
@@ -27,19 +27,39 @@
 </template>
 <script>
 export default {
+  props:{
+    // isScroll:{
+    //   type:Boolean,
+    //   default:false
+    // }
+  },
   data(){
     return{
       LoadData:{
         isLoad:false
-      }
+      },
+      isScroll:false
     }
   },
   created(){
 
   },
+  mounted(){
+    // 在headers组件里监听页面body滑动
+    window.addEventListener('scroll', this.handleScroll);
+  },
   methods:{
-
-  }
+    handleScroll(){ 
+      // 监控首页滑动的变化
+      var scrollTop = window.pageYOffset || document.documentElement.scrollTop  || document.body.scrollTop
+      if ( scrollTop > 120) {
+        this.isScroll = true ;
+        
+      }else if ( scrollTop <= 120) {
+        this.isScroll = false;
+      }
+    },
+  },
 }
 </script>
 
@@ -65,6 +85,7 @@ export default {
       padding:0 6px
       padding-top:5px
       width:100%
+      padding-bottom: 6px
       z-index:200
       .center
         display:flex
@@ -80,7 +101,6 @@ export default {
             width: 32px
             height: 32px
             font-size: 24px;
-            color: #fff
             background-color: transparent
         .select
           flex:1
@@ -92,7 +112,6 @@ export default {
           height: 32px
           line-height: 32px
           border-radius:18px
-          background-color: #fff
           white-space: nowrap
           overflow: hidden
           text-overflow: ellipsis
@@ -160,4 +179,22 @@ export default {
             font-size: 16px
           .load
             font-size:20px
+    .isscroll
+      background:#fff 
+      border-bottom:1px solid #efecec
+      .center 
+        .icon
+          i 
+            color:#333
+        .select
+          background:#efefef
+    .noscroll 
+      background:none 
+      border-bottom:none
+      .center 
+        .icon
+          i 
+            color: #fff
+        .select
+          background-color: #fff
 </style>

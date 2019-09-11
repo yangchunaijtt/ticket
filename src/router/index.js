@@ -8,6 +8,8 @@ import details  from "@/components/details/details"
 import tour  from "@/components/tour/tour"
 import city  from "@/components/city/city"
 import toknow from "@/components/toknow/toknow"
+import reserve from "@/components/reserve/reserve"
+import introduce from "@/components/introduce/introduce"
 import searchv from "@/components/searchv/searchv"
 
 Vue.use(Router)
@@ -17,7 +19,7 @@ export default new Router({
     {
       path: '/',
       name: '/',
-      redirect:"/details"
+      redirect:"/index"
     },
     {
       path: '/index',
@@ -47,7 +49,19 @@ export default new Router({
     {
       path:"/toknow",
       name:"toknow",
-      component:toknow
+      component:toknow,
+      children:[
+        {
+          path:"reserve",
+          name:"reserve",
+          component:reserve
+        },
+        {
+          path:"introduce",
+          name:"introduce",
+          component:introduce
+        }
+      ]
     },
     {
       path:"/searchv",

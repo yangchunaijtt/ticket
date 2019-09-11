@@ -16,11 +16,17 @@ import popular from "@/components/popular/popular.vue"
 export default {
   data(){
     return {
-
+     
     }
   },
   created(){
 
+  },
+  mounted(){
+    
+  },
+  methods:{
+   
   },
   components:{
     'v-header':header,
