@@ -22,7 +22,10 @@
      font-weight: normal;
      vertical-align: baseline;
  }
- 
+ input:focus{
+   color:none;
+   border-color:none;
+ }
  /* HTML5 display-role reset for older browsers */
  article, aside, details, figcaption, figure,
  footer, header, menu, nav, section {

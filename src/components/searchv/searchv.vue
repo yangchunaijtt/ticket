@@ -2,7 +2,7 @@
   <div class="searchv">
     <div class="fix">
       <div class="header">
-        <i class="icon iconfont iconzuo1"></i>
+        <i class="icon iconfont iconzuo1"  @click="returnLeft"></i>
         <div class="frame">
           <i class="icon iconfont iconsousuo"></i>
           <input type="text" placeholder="景点/城市" class="text">
@@ -12,7 +12,7 @@
     <div class="content">
       <h3 class="bt">热门搜索</h3>
       <ul class="itemul">
-        <li v-for="(item,index) in popularData" class="item">
+        <li v-for="(item,index) in popularData" class="item"  :keys="index">
           <router-link to="/tour" class="link">
             {{item}}
           </router-link>
@@ -40,7 +40,9 @@ export default {
     
   },
   methods:{
-
+    returnLeft(){
+      this.$router.go(-1);
+    }
   }
 }
 </script>

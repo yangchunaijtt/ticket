@@ -14,7 +14,7 @@
           <div class="head-txt">
             <span class="search iconfont iconsousuo">
             </span>
-            <input type="text" placeholder="常州恐龙园" class="spotname">
+            <input type="text" placeholder="常州恐龙园" class="spotname" @focus="toSearchv">
           </div>
         </div>
         <div class="people">
@@ -59,7 +59,10 @@ export default {
         this.isScroll = false;
       }
     },
-  },
+    toSearchv(){
+      this.$router.push({path:'/searchv'});
+    },
+  },  
 }
 </script>
 

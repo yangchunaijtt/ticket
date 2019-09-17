@@ -2,7 +2,7 @@
   <div class="screen">
     <ul class="content">
       <li class="item"   v-for="(item, index) in screenData" >
-        <router-link to="/tour" class="link">
+        <router-link :to="{path:'/tour',query:{search:item.name}}" class="link">
           <img :src="item.img" class="img" width="50" height="50">
           <div class="name">{{item.name}}</div>
         </router-link>
@@ -12,52 +12,35 @@
 </template>
 <script>
 export default {
+ 
   data(){
     return {
       screenData:[
         {
-          name:"主体公园",
-          img:"https://pages.c-ctrip.com/dm/20190729-iconNEW/D-menpiaowanleNEW.png"
+          name:"境外门票",
+          img:"https://pics.lvjs.com.cn/pics/super/2019/04/1555069170_96925.jpg"
+        },
+        {
+          name:"主题公园",
+          img:"https://pics.lvjs.com.cn/pics/super/2017/05/1494486580_29997.png"
         },
         {
           name:"动植物园",
-          img:"https://pages.c-ctrip.com/dm/20190729-iconNEW/D-menpiaowanleNEW.png"
-        },
-        {
-          name:"温泉",
-          img:"https://pages.c-ctrip.com/dm/20190729-iconNEW/D-menpiaowanleNEW.png"
-        },
-        {
-          name:"团队拓展",
-          img:"https://pages.c-ctrip.com/dm/20190729-iconNEW/D-menpiaowanleNEW.png"
-        },
-        {
-          name:"漂流戏水",
-          img:"https://pages.c-ctrip.com/dm/20190729-iconNEW/D-menpiaowanleNEW.png"
-        },
-        {
-          name:"田园度假",
-          img:"https://pages.c-ctrip.com/dm/20190729-iconNEW/D-menpiaowanleNEW.png"
-        },
-        {
-          name:"园林景观",
-          img:"https://pages.c-ctrip.com/dm/20190729-iconNEW/D-menpiaowanleNEW.png"
-        },
-        {
-          name:"民俗风情",
-          img:"https://pages.c-ctrip.com/dm/20190729-iconNEW/D-menpiaowanleNEW.png"
+          img:"https://pics.lvjs.com.cn/pics/super/2017/05/1494486513_49766.png"
         },
         {
           name:"湖光山色",
-          img:"https://pages.c-ctrip.com/dm/20190729-iconNEW/D-menpiaowanleNEW.png"
+          img:"https://pics.lvjs.com.cn/pics/super/2017/05/1494486197_10701.png"
         },
         {
-          name:"人文艺术",
-          img:"https://pages.c-ctrip.com/dm/20190729-iconNEW/D-menpiaowanleNEW.png"
-        },
-      ]
+          name:"田园度假",
+          img:"https://pics.lvjs.com.cn/pics/super/2017/05/1494487482_34779.jpg"
+        }
+      ],
+      screenArr:[]
     }
-  }
+  },
+  
 }
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
@@ -86,10 +69,7 @@ export default {
             width: 43px
             height: 43px
             border-radius: 50%
-            background-image: linear-gradient(-70deg,#fc7197 0,#fb515e 100%),linear-gradient(#18a1f1,#18a1f1)
-            background-blend-mode: normal,normal
-            -webkit-box-shadow: 0 1px 7px 2px rgba(251,87,130,.5)
-            box-shadow: 0 1px 7px 2px rgba(251,87,130,.5)
+            
           .name 
             width:100%
             font-size: 13px

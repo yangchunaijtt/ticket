@@ -5,23 +5,23 @@
         <router-link to="/index" class="icon iconfont iconzuo1"></router-link>
         <div class="frame">
           <i class="icon iconfont iconsousuo"></i>
-          <input type="text" placeholder="常州" class="input">
+          <input type="text" placeholder="常州" class="input" @focus="toSearchv" :value="searchName">
         </div>
       </div>
       <div class="label">
         <ul class="labelul">
           <div class="slide">
-            <li class="item"    v-for="(item, index) in label" >
+            <li class="item"    v-for="(item, index) in label" :keys="index">
               {{item}}
             </li> 
           </div>        
         </ul>
-        <div class="drop">
-          <i class="icon iconfont iconxiala-"></i>
+        <div class="drop"  @click="showAll">
+          <i class="icon iconfont" :class="isShowAll?'iconshangla':'iconxiala-'"></i>
         </div>
-        <div class="all" v-show="false">
+        <div class="all" v-show="isShowAll">
           <ul class="allof">
-            <li class="item"   v-for="(item, index) in label"  >
+            <li class="item"   v-for="(item, index) in label"   :keys="index">
               <div class="itemdiv">
                 {{item}}
                 <i class="icon iconfont icondui"></i>
@@ -31,89 +31,58 @@
         </div>
       </div>
       <div class="select">
-          <div class="all">
+          <div class="all" :class="isSort==='all'?'isall':'noall'" @click="isall">
             综合排序
-            <i class="icon iconfont icondui"></i>
+            <i class="icon iconfont icondui" v-show="isSort==='all'"></i>
           </div>
-          <div class="money">
+          <div class="money" :class="isSort!='all'?'ismoney':'nomoney'" @click="ismoney">
             价格
-            <i class="icon iconfont iconxiangxia"></i>
+            <i class="icon iconfont" :class="isSort==='all'?'iconxiangxia':isSort==='xia'?'iconxiangxia':'iconxiangshang'"></i>
+            
           </div>
       </div>
     </div>
     <div class="content">
       <ul class="ul">
-        <li class="item"    v-for="(item, index) in tourData" >
-          <div class="center">
-            <img :src="item.img" width="100" class="img">
-            <div class="today">今日订</div>
-            <div class="words">
-              <p class="name">{{item.name}}</p>
-              <div class="label">{{item.label}}</div>
-              <p class="dgree">{{item.degree}}%</p>
-              <div class="price">￥{{item.price}}起</div>
+        <li class="item"    v-for="(item, index) in tourSearchData.productInfos?tourSearchData.productInfos:[]" >
+          <router-link :to="{path:'/details',query:{id:item.id}}" class="itemA">
+            <div class="center">
+              <img :src="item.images[0]" width="100" class="img">
+              <div class="today">今日订</div>
+              <div class="words">
+                <p class="name">{{item.productName}}</p>
+                <div class="label" :class="item.productTheme[0]?'':'noboder'">{{item.productTheme[0]?item.productTheme[0]:""}}</div>
+                <p class="dgree">95%</p>
+                <div class="price">￥{{item.minPrice}}起</div>
+              </div>
             </div>
-          </div>
+          </router-link>
         </li>
       </ul>
     </div>
   </div>
 </template>
 <script>
+
+// 请求部分配置和引入
+import https from "../../https.js"
+
+// 参数
+const ERR_OK = 200;
+const tour_url ="http://58.216.175.118:86/api/LvmamaScenicTickets/ProductLocalInfos/GetProductInfosList";
+const tour_data = {
+  keyName: "",
+  hasPrice: true,
+  pageIndex: 1,
+  productStatus: 1,
+  pageSize: 6
+};
+
 export default {
+  
   data(){
     return {
-       tourData:[
-        {
-          "name": "常州恐龙园",
-          "img": "https://pics.lvjs.com.cn//uploads/pc/place2/2017-04-27/50a7584d-ea39-46e3-bbc7-340f9f566513_480_320.jpg",
-          "price": 24,
-          "label":"主题公园",
-          "degree":"95"
-        },
-        {
-          "name": "常州恐龙园",
-          "img": "https://pics.lvjs.com.cn//uploads/pc/place2/2017-04-27/50a7584d-ea39-46e3-bbc7-340f9f566513_480_320.jpg",
-          "price": 24,
-          "label":"主题公园",
-          "degree":"95"
-        },
-        {
-          "name": "常州恐龙园",
-          "img": "https://pics.lvjs.com.cn//uploads/pc/place2/2017-04-27/50a7584d-ea39-46e3-bbc7-340f9f566513_480_320.jpg",
-          "price": 24,
-          "label":"主题公园",
-          "degree":"95"
-        },
-        {
-          "name": "常州恐龙园",
-          "img": "https://pics.lvjs.com.cn//uploads/pc/place2/2017-04-27/50a7584d-ea39-46e3-bbc7-340f9f566513_480_320.jpg",
-          "price": 24,
-          "label":"主题公园",
-          "degree":"95"
-        },
-        {
-          "name": "常州恐龙园",
-          "img": "https://pics.lvjs.com.cn//uploads/pc/place2/2017-04-27/50a7584d-ea39-46e3-bbc7-340f9f566513_480_320.jpg",
-          "price": 24,
-          "label":"主题公园",
-          "degree":"95"
-        },
-        {
-          "name": "常州恐龙园",
-          "img": "https://pics.lvjs.com.cn//uploads/pc/place2/2017-04-27/50a7584d-ea39-46e3-bbc7-340f9f566513_480_320.jpg",
-          "price": 24,
-          "label":"主题公园",
-          "degree":"95"
-        },
-        {
-          "name": "常州恐龙园",
-          "img": "https://pics.lvjs.com.cn//uploads/pc/place2/2017-04-27/50a7584d-ea39-46e3-bbc7-340f9f566513_480_320.jpg",
-          "price": 24,
-          "label":"主题公园",
-          "degree":"95"
-        },
-      ],
+      tourSearchData:{},
       label:[
         "主题公园",
         "动植物园",
@@ -126,13 +95,58 @@ export default {
         "湖光山色",
         "人文艺术",
       ],
+      isShowAll:false,  // 是否显示所有筛选
+      isSort:"all",   // 排序的方式：all xia shang
+      searchName:"",
     }
   },
   created(){
-
+    this.searchName = this.$utils.getUrlKey("search");
+    tour_data.keyName = this.searchName;
+    https.fetchPost(tour_url,tour_data ).then((data) => {
+          // console.log("取到数据",data);
+          if ( data.status == ERR_OK ) {
+            this.tourSearchData = data.data.data
+            console.log(this.tourSearchData);
+          }else{
+            console.log("发送错误",data.status);
+          }
+      }).catch( err=> {
+              console.log("tour组件ajax发生错误",err)
+          }
+      );
   },
   methods:{
-
+    toSearchv(){
+       this.$router.push({path:'/searchv'});
+    },
+    showAll(){
+      this.isShowAll = !this.isShowAll;
+    },
+    isall(){
+      this.isSort = "all";
+    },
+    ismoney(){
+      if (  this.isSort ==='xia' ) {
+        this.isSort = "shang";
+      }else if (  this.isSort ==='shang') {
+          this.isSort = "xia";
+      }else if (this.isSort ==='all') {
+        if ( this.isSort ==='xia' ) {
+            this.isSort = "shang";
+        }else {
+          this.isSort = "xia";
+        }
+      }
+    },
+  },
+  computed:{
+    // returnAll(){
+    //   this.tourSearchData = this.tourSearchData.productInfos.sort(compare);
+    //   var compare = function (a, b) {//比较函数
+    //     return a.id-b.id;
+    //   }
+    // },
   }
 }
 </script>
@@ -226,6 +240,9 @@ export default {
           width:100%
           z-index:300
           background:#fff
+          border: 1px solid #999
+          border-left: none
+          border-right: none
           .allof
             overflow:hidden
             margin:14px 0 0 14px 
@@ -265,11 +282,19 @@ export default {
           width:50%
           float:left
           border-right:1px solid #e0dfdf
+        .isall
+          color:#ff8800
+        .noall 
+          color:#333
           .icon 
             //
         .money
           flex:1
           float:right
+        .ismoney 
+          color:#ff8800
+        .nomoney 
+          color:#333
           .icon 
             // 
     .content
@@ -284,64 +309,70 @@ export default {
           position:relative
           padding:15px 10px 
           border-bottom:1px solid #e0dfdf
-          .center
-            display:flex
+          .itemA
+            display:block 
             width:100% 
             height:100%
-            .img
-              position:relative
-              flex:0 0 100px
-              overflow:hidden
-              margin-right:10px
-              height:100px 
-              border-radius:6px 
-            .today
-              // background-image: linear-gradient("90deg,#FFB800 0,#F90 100%")
-              position: absolute
-              top: 15px 
-              left: 10px
-              padding: 8px 4px 7px 
-              background:#FFB800
-              color: #fff
-              text-align: center
-              font-size: 11px
-              border-bottom-right-radius: 6px
-              line-height: 1px 
-            .words
-              flex:1
-              .name
-                font-size: 16px
-                line-height: 18px
-                max-height: 18px
-                color:#777
-                font-weight:500
-                overflow: hidden
-                text-overflow: ellipsis
-                -webkit-box-orient: vertical
-                word-break: break-all
-              .label
-                display: inline-flex
-                margin:8px 0
-                padding: 9px 3px 7px
-                justify-content: center
-                align-items: center
-                -webkit-text-size-adjust: none
-                color: #F80
-                font-size: 11px
-                line-height: 1px
+            .center
+              display:flex
+              width:100% 
+              height:100%
+              .img
+                position:relative
+                flex:0 0 100px
+                overflow:hidden
+                margin-right:10px
+                height:100px 
+                border-radius:6px 
+              .today
+                // background-image: linear-gradient("90deg,#FFB800 0,#F90 100%")
+                position: absolute
+                top: 15px 
+                left: 10px
+                padding: 8px 4px 7px 
+                background:#FFB800
+                color: #fff
                 text-align: center
-                color: #5CA2F8
-                border: 1px solid #ADD0FB
-                border-radius:2px
-              .dgree
-                margin:6px 0
-                font-size: 16px
-                color: #5CA2F8;
-              .price
-                position:absolute 
-                right:15px 
-                top:50%
-                color:#FF5A68
-                font-size:16px
-                font-weight:500
+                font-size: 11px
+                border-bottom-right-radius: 6px
+                line-height: 1px 
+              .words
+                flex:1
+                .name
+                  font-size: 16px
+                  line-height: 18px
+                  max-height: 18px
+                  color:#777
+                  font-weight:500
+                  overflow: hidden
+                  text-overflow: ellipsis
+                  -webkit-box-orient: vertical
+                  word-break: break-all
+                .label
+                  display: inline-flex
+                  margin:8px 0
+                  padding: 9px 3px 7px
+                  justify-content: center
+                  align-items: center
+                  -webkit-text-size-adjust: none
+                  color: #F80
+                  font-size: 11px
+                  line-height: 1px
+                  text-align: center
+                  color: #5CA2F8
+                  border: 1px solid #ADD0FB
+                  border-radius:2px
+                .noboder
+                  border:none
+                .dgree
+                  margin:6px 0
+                  font-size: 16px
+                  color: #5CA2F8;
+                .price
+                  position:absolute 
+                  right:15px 
+                  top:50%
+                  color:#FF5A68
+                  font-size:16px
+                  font-weight:500
 </style>

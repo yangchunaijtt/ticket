@@ -2,22 +2,24 @@
   <div class="play">
     <div class="header">
       <span class="text">人气必玩</span>
-      <router-link to="/tour" class="link">
+      <router-link :to="{path:'/tour',query:{search:'常州'}}" class="link">
         常州全部景点
         <i class="icon iconfont iconyou3"></i>
       </router-link>
     </div>
     <div class="scroll">
       <ul class="center">
-        <li class="item"  v-for="(item, index) in mustPlayData.data" >
-          <img :src="item.img" class="img">
-          <div class="today">今日订</div>
-          <div class="money">
-            <P class="name">{{item.name}}</P>
-            <span class="price">
-              ￥{{item.price}}起
-            </span>
-          </div>
+        <li class="item"  v-for="(item, index) in goodList.productInfos?goodList.productInfos.slice(2,8):{}" >
+          <router-link :to="{path:'/details',query:{id:item.id}}" class="itemA">
+            <img :src="item.images[0]" class="img">
+            <div class="today">今日订</div>
+            <div class="money">
+              <P class="name">{{item.productName}}</P>
+              <span class="price">
+                ￥{{item.minPrice}}起
+              </span>
+            </div>
+          </router-link>
         </li>
       </ul>
     </div>
@@ -26,6 +28,14 @@
 
 <script>
 export default {
+  props:{
+    goodList:{
+      type:Object,
+      default:{
+        
+      }
+    }
+  },
   data(){
     return {
       mustPlayData:{
@@ -81,11 +91,12 @@ export default {
           }
         ]
       },
+      playArr:[]
     }
   },
-  computed:{
-    
-  }
+  mounted(){
+    // this.playArr = this.;
+  },
 }
 </script>
 
@@ -125,36 +136,40 @@ export default {
           font-size: 0
         :last-child
             margin-right:0
-          .img
+          .itemA
+            display:block 
             width:100% 
-          .today  
-            position: absolute;
-            top: 0
-            left: 0
-            background: #ff720e
-            color: #fff
-            font-size: 11px
-            padding: 0 6px 0 4px
-            border-bottom-right-radius: 7px
-            height: 16px
-            line-height: 16px
-          .money 
-            border-width: 0 1px 1px
-            padding: 5px
-            background: #fff
-            .name 
+            height:100%
+            .img
+              width:100% 
+            .today  
+              position: absolute;
+              top: 0
+              left: 0
+              background: #ff720e
+              color: #fff
+              font-size: 11px
+              padding: 0 6px 0 4px
+              border-bottom-right-radius: 7px
               height: 16px
               line-height: 16px
-              font-size: 12px
-              margin-bottom: 5px
-              color: #666
-              text-overflow: ellipsis
-              overflow: hidden
-            .price
-              display:block
-              color: #d30775
-              font-size: 15px
-              overflow: hidden
-              height: 22px
+            .money 
+              border-width: 0 1px 1px
+              padding: 5px
+              background: #fff
+              .name 
+                height: 16px
+                line-height: 16px
+                font-size: 12px
+                margin-bottom: 5px
+                color: #666
+                text-overflow: ellipsis
+                overflow: hidden
+              .price
+                display:block
+                color: #d30775
+                font-size: 15px
+                overflow: hidden
+                height: 22px
         
 </style>

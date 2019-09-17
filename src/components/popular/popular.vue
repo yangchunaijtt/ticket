@@ -2,85 +2,43 @@
   <div class="popular">
     <div class="title">
       <span class="text">热门景点</span>
-      <span class="to">
+      <router-link class="to" :to="{path:'/tour',query:{search:'常州'}}">
         附近景点
         <i class="icon iconfont iconyou3"></i>
-      </span>
+      </router-link>
     </div>
     <ul class="content">
-      <li class="item"   v-for="(item, index) in popularData" >
-        <div class="center">
-          <img :src="item.img" width="100" class="img">
-          <div class="today"></div>
-          <div class="words">
-            <p class="name">{{item.name}}</p>
-            <div class="label">{{item.label}}</div>
-            <p class="dgree">{{item.degree}}%</p>
-            <div class="price">￥{{item.price}}起</div>
+      <li class="item"   v-for="(item, index) in goodList.productInfos" >
+        <router-link :to="{path:'/details',query:{id:item.id}}">
+          <div class="center">
+            <img :src="item.images[0]" width="100" class="img">
+            <div class="today"></div>
+            <div class="words">
+              <p class="name">{{item.productName}}</p>
+              <div class="label">{{item.productTheme[0]}}</div>
+              <p class="dgree">98%满意度</p>
+              <div class="price">￥{{item.minPrice}}起</div>
+            </div>
           </div>
-        </div>
+        </router-link>
       </li>
     </ul>
-    <router-link to="" class="bottom">
+    <router-link :to='{path:"/tour",query:{search:"常州"}}' class="bottom">
       更多常州景点
     </router-link>
   </div>
 </template>
 <script>
 export default {
+  props:{
+    goodList:{
+      type:Object,
+      default:{}
+    }
+  },
   data(){
     return {
-      popularData:[
-        {
-          "name": "常州恐龙园",
-          "img": "https://pics.lvjs.com.cn//uploads/pc/place2/2017-04-27/50a7584d-ea39-46e3-bbc7-340f9f566513_480_320.jpg",
-          "price": 24,
-          "label":"主题公园",
-          "degree":"95"
-        },
-        {
-          "name": "常州恐龙园",
-          "img": "https://pics.lvjs.com.cn//uploads/pc/place2/2017-04-27/50a7584d-ea39-46e3-bbc7-340f9f566513_480_320.jpg",
-          "price": 24,
-          "label":"主题公园",
-          "degree":"95"
-        },
-        {
-          "name": "常州恐龙园",
-          "img": "https://pics.lvjs.com.cn//uploads/pc/place2/2017-04-27/50a7584d-ea39-46e3-bbc7-340f9f566513_480_320.jpg",
-          "price": 24,
-          "label":"主题公园",
-          "degree":"95"
-        },
-        {
-          "name": "常州恐龙园",
-          "img": "https://pics.lvjs.com.cn//uploads/pc/place2/2017-04-27/50a7584d-ea39-46e3-bbc7-340f9f566513_480_320.jpg",
-          "price": 24,
-          "label":"主题公园",
-          "degree":"95"
-        },
-        // {
-        //   "name": "常州恐龙园",
-        //   "img": "https://pics.lvjs.com.cn//uploads/pc/place2/2017-04-27/50a7584d-ea39-46e3-bbc7-340f9f566513_480_320.jpg",
-        //   "price": 24,
-        //   "label":"主题公园",
-        //   "degree":"95"
-        // },
-        // {
-        //   "name": "常州恐龙园",
-        //   "img": "https://pics.lvjs.com.cn//uploads/pc/place2/2017-04-27/50a7584d-ea39-46e3-bbc7-340f9f566513_480_320.jpg",
-        //   "price": 24,
-        //   "label":"主题公园",
-        //   "degree":"95"
-        // },
-        // {
-        //   "name": "常州恐龙园",
-        //   "img": "https://pics.lvjs.com.cn//uploads/pc/place2/2017-04-27/50a7584d-ea39-46e3-bbc7-340f9f566513_480_320.jpg",
-        //   "price": 24,
-        //   "label":"主题公园",
-        //   "degree":"95"
-        // },
-      ]
+     
     }
   }
 }
@@ -97,6 +55,7 @@ export default {
       .text
         float:left
       .to
+        display:inline-block
         float:right
         font-size:12px 
     .content 

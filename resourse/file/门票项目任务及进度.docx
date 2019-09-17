@@ -3,6 +3,25 @@
 C:\Users\Administrator\Desktop\VueWorkSpace\VueWorkSpace\yarntravel
 2:element项目地址
 C:\Users\Administrator\Desktop\demo\element\element
+3：驴妈妈网址：
+https://m.lvmama.com/ticket/
+4：携程网址：
+https://m.ctrip.com/webapp/ticket/ticket
+
+5:文档地址
+http://192.168.1.8:3998/Help
+6：向后台取API时要加上 //58.216.175.118:86
+案例："http://58.216.175.118:86/api/LvmamaScenicTickets/ProductLocalInfos/GetProductInfosList
+
+
+技术资料部分
+一：轮播图插件[details组件部分使用vue-awesome-swiper]：vue-awesome-swiper
+1：完整介绍：https://segmentfault.com/a/1190000016402768
+2：csdn补充部分:https://blog.csdn.net/u014027876/article/details/81663080
+
+
+代码注意部分
+1：v-for需要绑定下keys，来提高效率 
 
 
 9月4号
