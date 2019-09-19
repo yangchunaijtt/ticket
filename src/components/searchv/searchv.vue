@@ -5,7 +5,7 @@
         <i class="icon iconfont iconzuo1"  @click="returnLeft"></i>
         <div class="frame">
           <i class="icon iconfont iconsousuo"></i>
-          <input type="text" placeholder="景点/城市" class="text">
+          <input type="text" placeholder="景点/城市" class="text"  v-model="inputVal">
         </div>
       </div>
     </div>
@@ -13,7 +13,7 @@
       <h3 class="bt">热门搜索</h3>
       <ul class="itemul">
         <li v-for="(item,index) in popularData" class="item"  :keys="index">
-          <router-link to="/tour" class="link">
+          <router-link :to="{path:'/tour',query:{search:item}}" class="link">
             {{item}}
           </router-link>
         </li>
@@ -21,7 +21,10 @@
     </div>
   </div>
 </template>
+
 <script>
+
+
 export default {
   data(){
     return{
@@ -34,16 +37,42 @@ export default {
         "东方盐湖城",
         "灵山大佛",
       ],
+      timeout:null,
+      inputVal:"",
     }
   },
-  created(){
-    
+  watch: {
+    inputVal(newValue) {
+        // 实现input连续输入，只发一次请求
+        clearTimeout(this.timeout);
+        // console.log(newValue);
+        this.timeout = setTimeout(() => {
+          // console.log(newValue);
+          this.$router.push({path:'/tour',query: {search:newValue}})
+        }, 2000);
+    }
   },
   methods:{
     returnLeft(){
       this.$router.go(-1);
+    },
+    debounceInput(E){
+      var ti = 0;
+      console.log("t1",t1);
+      // console.log(E.target.value,typeof E.target.value== 'string',E.target.value.trim().length!==0);
+      if (typeof E.target.value== 'string'){
+        if ( E.target.value.trim().length!==0 ){
+            t1 = window.setTimeout(function(){
+            console.log(E.target.value);
+          },1500)
+        }
+      }else {
+        window.clearTimeout(t1) // 去除定时器
+      }
+      
     }
-  }
+  },
+ 
 }
 </script>
 <style lang="stylus"  rel="stylesheet/stylus" scoped>

@@ -47,7 +47,7 @@
         <li class="item"    v-for="(item, index) in tourSearchData.productInfos?tourSearchData.productInfos:[]" >
           <router-link :to="{path:'/details',query:{id:item.id}}" class="itemA">
             <div class="center">
-              <img :src="item.images[0]" width="100" class="img">
+              <img v-lazy="item.images[0]" width="100" class="img">
               <div class="today">今日订</div>
               <div class="words">
                 <p class="name">{{item.productName}}</p>

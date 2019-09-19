@@ -9,9 +9,9 @@
     </div>
     <div class="scroll">
       <ul class="center">
-        <li class="item"  v-for="(item, index) in goodList.productInfos?goodList.productInfos.slice(2,8):{}" >
+        <li class="item"  v-for="(item, index) in goodList.productInfos?goodList.productInfos.slice(2,8):{}" :keys="index">
           <router-link :to="{path:'/details',query:{id:item.id}}" class="itemA">
-            <img :src="item.images[0]" class="img">
+            <img v-lazy="item.images[0]" class="img">
             <div class="today">今日订</div>
             <div class="money">
               <P class="name">{{item.productName}}</P>
@@ -125,7 +125,8 @@ export default {
         padding: 9px 0 5px 10px
         width:1022px
         overflow-x: scroll
-        overflow-y: hidden
+        overflow-y: hidden 
+        max-height: 160px
         // overflow:hidden
         .item
           position:relative

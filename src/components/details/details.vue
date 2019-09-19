@@ -5,34 +5,38 @@
         <!-- 轮播图部分 -->
         <swiper :options="swiperOption" class="swiper-wrap"  ref="mySwiper" v-if="banner.length!=0">
           <swiper-slide v-for="(item,index) in banner" :key="index" class="item">
-            <img :src="item"  class="bannerimg"/>
+            <img v-lazy="item"  class="bannerimg"/>
           </swiper-slide>
           <!-- 常见的小圆点 -->
           <div class="swiper-pagination"  v-for="(item,index) in banner" :key="index" slot="pagination" ></div>
         </swiper>
       </div>
-      <div class="return" @click="returnLeft">
+      <router-link to="/index" class="return">
         <i class="icon iconfont iconzuo1"></i>
-      </div>
+      </router-link>
     </div>
     <div class="content">
       <div class="viewsport">
         <h2 class="name">{{detailsGetData.productName}}</h2>
         <router-link to="" class="addressName">
           <i class="location iconfont iconlocation"></i>
-          <span class="address">{{detailsGetData.scenicInfos.placeToAddr}}</span>
+          <span class="address">{{detailsGetData.scenicInfos.placeToAddr?detailsGetData.scenicInfos.placeToAddr:""}}</span>
           <i class="return iconfont iconyou3"></i>
         </router-link>
         <div class="toknow">
           <div class="reserve">
-            <h4 class="title">景区须知</h4>
-            <p class="tell">开放时间、免票政策</p>
-            <i class="return iconfont iconyou3"></i>
+            <router-link :to="{path:'/toknow',query:{id:searchId}}" class="reserveurl">
+              <h4 class="title">景区须知</h4>
+              <p class="tell">开放时间、免票政策</p>
+              <i class="return iconfont iconyou3"></i>
+            </router-link>
           </div>
           <div class="introduce">
-            <h4 class="title">景区介绍</h4>
-            <p class="tell">好玩项目先知道</p>
-            <i class="return iconfont iconyou3"></i>
+            <router-link :to="{path:'/toknow',query:{id:searchId}}" class="introduceurl"> 
+              <h4 class="title">景区介绍</h4>
+              <p class="tell">好玩项目先知道</p>
+              <i class="return iconfont iconyou3"></i>
+            </router-link>
           </div>
         </div>
       </div>
@@ -98,7 +102,7 @@
         </div>
       </div> 
       <div class="to_toknow">
-        <router-link to="/toknow" class="toknowLink">查看全部介绍</router-link>
+        <router-link :to="{path:'/toknow',query:{id:searchId}}" class="toknowLink">查看全部介绍</router-link>
       </div> 
     </div>
   </div>
@@ -221,6 +225,12 @@ export default {
             height:100%
         .swiper-pagination
           z-index:300 
+          .swiper-pagination-bullet
+            height:10px!important
+            width:10px !important
+            background:#fff!important
+          .swiper-pagination-bullet-active
+            background:#666!important
       .return 
         position:absolute
         left:10px 
@@ -295,7 +305,11 @@ export default {
             background: #F7F7FB
           .reserve
             margin-right:2%
-          .reserve,.introduce          
+            .reserveurl,.introduceurl 
+              display:block 
+              width:100% 
+              height:100%
+          .reserveurl,.introduceurl         
             .title
               padding: 0
               font-size: 13px
@@ -326,7 +340,7 @@ export default {
         background-color: #fff
         font-weight: 700
       .top
-        height:150px
+        height:160px
         overflow: hidden
         margin-bottom: 18px
         padding:15px

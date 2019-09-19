@@ -3,7 +3,7 @@
     <ul class="content">
       <li class="item"   v-for="(item, index) in screenData" >
         <router-link :to="{path:'/tour',query:{search:item.name}}" class="link">
-          <img :src="item.img" class="img" width="50" height="50">
+          <img v-lazy="item.img" class="img" width="50" height="50">
           <div class="name">{{item.name}}</div>
         </router-link>
       </li>

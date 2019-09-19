@@ -11,7 +11,7 @@
       <li class="item"   v-for="(item, index) in goodList.productInfos" >
         <router-link :to="{path:'/details',query:{id:item.id}}">
           <div class="center">
-            <img :src="item.images[0]" width="100" class="img">
+            <img v-lazy="item.images[0]" width="100" class="img">
             <div class="today"></div>
             <div class="words">
               <p class="name">{{item.productName}}</p>

@@ -3,6 +3,7 @@
 C:\Users\Administrator\Desktop\VueWorkSpace\VueWorkSpace\yarntravel
 2:element项目地址
 C:\Users\Administrator\Desktop\demo\element\element
+
 3：驴妈妈网址：
 https://m.lvmama.com/ticket/
 4：携程网址：
@@ -18,7 +19,9 @@ http://192.168.1.8:3998/Help
 一：轮播图插件[details组件部分使用vue-awesome-swiper]：vue-awesome-swiper
 1：完整介绍：https://segmentfault.com/a/1190000016402768
 2：csdn补充部分:https://blog.csdn.net/u014027876/article/details/81663080
-
+二：vue懒加载插件vue-lazyload
+1；入门文章：
+https://www.cnblogs.com/vickya/p/8658873.html
 
 代码注意部分
 1：v-for需要绑定下keys，来提高效率 
