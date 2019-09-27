@@ -11,7 +11,7 @@
       <div class="label">
         <ul class="labelul">
           <div class="slide">
-            <li class="item"    v-for="(item, index) in label" :keys="index">
+            <li class="item"    v-for="(item, index) in label" :keys="index"  @click="sortTitle(item)">
               {{item}}
             </li> 
           </div>        
@@ -22,9 +22,8 @@
         <div class="all" v-show="isShowAll">
           <ul class="allof">
             <li class="item"   v-for="(item, index) in label"   :keys="index">
-              <div class="itemdiv">
+              <div class="itemdiv" @click="sortTitle(item)">
                 {{item}}
-                <i class="icon iconfont icondui"></i>
               </div>
             </li>
           </ul>
@@ -84,6 +83,7 @@ export default {
     return {
       tourSearchData:{},
       label:[
+        "不限",
         "主题公园",
         "动植物园",
         "温泉",
@@ -107,7 +107,7 @@ export default {
           // console.log("取到数据",data);
           if ( data.status == ERR_OK ) {
             this.tourSearchData = data.data.data
-            console.log(this.tourSearchData);
+            console.log("tour的数据",this.tourSearchData);
           }else{
             console.log("发送错误",data.status);
           }
@@ -126,6 +126,7 @@ export default {
     isall(){
       this.isSort = "all";
     },
+    // 点击排序的操作
     ismoney(){
       if (  this.isSort ==='xia' ) {
         this.isSort = "shang";
@@ -138,7 +139,36 @@ export default {
           this.isSort = "xia";
         }
       }
+      // 判断对数据进行操作
+      if ( this.isSort =="xia" ){
+        this.tourSearchData.productInfos.sort(function(a,b){
+            return b.minPrice-a.minPrice
+        })
+      }else if ( this.isSort =="shang" ){
+        this.tourSearchData.productInfos.sort(function(a,b){
+          return a.minPrice  -b.minPrice
+        })
+      }else if ( this.isSort =="all" ) {
+        this.tourSearchData.productInfos.sort(function(a,b){
+          return a.id  -b.id
+        })
+      }
     },
+    // 点击筛选类型的操作
+    sortTitle(value){
+      console.log( value);
+      if (!Array.isArray(this.tourSearchData.productInfos)) {
+        console.log('type error!')
+        return
+      }
+      for (var i = 0;i<this.tourSearchData.productInfos.length; i++ ) {
+        // console.log(this.tourSearchData.productInfos[i].productTheme[0]);
+        // if ( this.tourSearchData.productInfos[i].productTheme[0] !== value){
+        //   this.tourSearchData.productInfos.splice(i+1,1);
+        // }
+      }
+      
+    }
   },
   computed:{
     // returnAll(){
@@ -240,7 +270,7 @@ export default {
           width:100%
           z-index:300
           background:#fff
-          border: 1px solid #999
+          border: 1px solid #e2dfdf
           border-left: none
           border-right: none
           .allof
@@ -259,17 +289,6 @@ export default {
                 color: #666
                 background: #f5f5f5
                 font-size: 12px
-                .icon
-                  position: absolute
-                  width: 14px
-                  right: 0
-                  bottom: 0
-                  font-size: 12px
-                  line-height: 14px
-                  text-align: center
-                  border-width: 8px;
-                  border-color: #f80 transparent transparent #f80
-                  border-radius: 2px
       .select
         width:100%
         display:flex

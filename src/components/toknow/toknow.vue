@@ -46,6 +46,7 @@ export default {
           // 把给子组件的数据处理下在给子组件
           this.tosunData.bookingInfo = this.toknowData.bookingInfo;
           this.tosunData.playAttractions = this.toknowData.playAttractions;
+          
           this.tosunData.openTime = this.toknowData.scenicInfos.openTimes.openTime;
           console.log(this.toknowData);
         }else {

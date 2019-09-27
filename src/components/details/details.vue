@@ -43,7 +43,7 @@
     </div>
     <div class="booking">
       <div class="item">
-        <!-- 使用钱组件部分 -->
+        <booking :goodsList="this.detailsGetData.goodsList"></booking>
       </div>
     </div>
     <div class="telldiv">
@@ -105,6 +105,61 @@
         <router-link :to="{path:'/toknow',query:{id:searchId}}" class="toknowLink">查看全部介绍</router-link>
       </div> 
     </div>
+
+    <!-- 点击每个预定须知时弹开的，预订须知部分 -->
+    <transition name ="fade">
+      <div class="notes" v-show="shownotes" v-if="noticesData" >
+        <div class="close" @click="closeNotes">
+          <i class="closeicon iconfont iconcuo"></i>
+        </div>
+        <div class="notesdiv">
+          <div class="testtext">
+            <div class="div">
+              <h3 class="name">费用包含</h3>
+              <p class="text">{{noticesData.costInclude}}</p>
+            </div>
+            <div class="div">
+              <h3 class="name">费用不包含</h3>
+              <p class="text">{{noticesData.costNoInclude?noticesData.costNoInclude:""}}</p>
+            </div>
+            <div class="div">
+              <h3 class="name">预定时间</h3>
+              <p class="text">{{noticesData.passTimeLimit}}</p>
+            </div>
+            <div class="div">
+              <h3 class="name">入园须知</h3>
+              <p class="text">入园时间：{{noticesData.notice.enterLimit.limitTime}}</p>
+              <p class="text">入园地点：{{noticesData.notice.getTicketPlace}}</p>
+              <p class="text">取票时间:{{noticesData.notice.getTicketTime?noticesData.notice.getTicketTime:""}}</p>
+              <p class="text">取票地点:{{noticesData.notice.getTicketPlace}}</p>
+              <p class="text">入园方式：{{noticesData.notice.ways}}</p>
+            </div>
+            <div class="div">
+              <h3 class="name">重要提示</h3>
+              <p v-if="noticesData.notice.effectiveDesc" class="text">游玩时间：{{noticesData.notice.effectiveDesc?noticesData.notice.effectiveDesc:""}}</p>
+              <p class="text">提示：{{noticesData.importantNotice}}</p>
+            </div>
+            <div class="div">
+              <h3 class="name">退票规则</h3>
+              <p class="text">{{noticesData.refundRuleNotice}}</p>
+            </div>
+            <div class="div">
+              <h3 class="name">改期规则</h3>
+              <p class="text">本商品一经过预订不支持改期（可退款的商品可申请退款后重新下单）</p>
+            </div>
+          </div>
+          <div class="buy">
+            <div class="buyleft">
+              <span class="nowMPrice">原价：￥{{noticesData.nowMPrice}}</span>
+              <span class="nowPrice">在线付：￥{{noticesData.nowPrice}}</span>
+            </div>
+            <div class="buyright" @click="">
+              立即预定
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 <script>
@@ -113,12 +168,17 @@
 import { swiper, swiperSlide } from "vue-awesome-swiper";
 require("swiper/dist/css/swiper.css");
 
+import booking from "../booking/booking"
 // 请求部分配置和引入
 import https from "../../https.js"
 
 // 参数
 const ERR_OK = 200;
 const details_url ="http://58.216.175.118:86/api/LvmamaScenicTickets/ProductLocalInfos/GetProductInfos/";
+
+const notice_ok = 200;
+const notice_url = "http://58.216.175.118:86/api/LvmamaScenicTickets/GoodsLocalInfos/GetGoodsInfos/";
+
 
 export default {
   data() {
@@ -167,8 +227,17 @@ export default {
           el: ".swiper-pagination",
           clickable: true,
           type: "bullets"
-        }
-      }
+        },
+
+      },
+      // 给booking传递的值
+      bookingGoodsList:{
+        "children":[],        
+      },
+      // 显示预订须知主要部分
+      shownotes:false,
+      noticesData:{},
+      //
     };
   },
   created(){
@@ -181,7 +250,9 @@ export default {
           this.detailsGetData = data.data.data;
           // 赋值图片
           this.banner = this.detailsGetData.images.image
-          console.log(this.detailsGetData);
+
+          // console.log(this.detailsGetData.goodsList);
+
         }else {
           console.log("details页ajax出现问题",data.status)
         }
@@ -190,21 +261,65 @@ export default {
             console.log("details页ajax出现问题",err)
         }
     );
+    // 默认的预订须知提示
+     https.fetchGet(notice_url +"1825",{} ).then((data) => {
+        if (  data.status === notice_ok) {
+          this.noticesData = data.data.data;
+          
+        }else {
+          this.shownotes  = false;
+          console.log("details页预订须知ajax出现问题",data)
+        }
+       
+      }).catch(err=>{
+          this.shownotes  = false;
+              console.log("details页预订须知ajax出现问题",err)
+          }
+      );
   },
   methods:{
     returnLeft(){   // 返回上一页
        this.$router.go(-1);
     },
+    //子组件点击向负组件提示值,并显示预订须知的内容，发送ajax内容。
+    noticeAjax(data){
+      // console.log("父组件",data,notice_url);
+      https.fetchGet(notice_url +data,{} ).then((data) => {
+        if (  data.status === notice_ok) {
+          this.noticesData = data.data.data;
+          this.shownotes  = true;
+          console.log(this.noticesData);
+        }else {
+          this.shownotes  = false;
+          console.log("details页预订须知ajax出现问题",data)
+        }
+       
+      }).catch(err=>{
+          this.shownotes  = false;
+              console.log("details页预订须知ajax出现问题",err)
+          }
+      );
+    },
+    // 关闭预定须知
+    closeNotes(){
+      this.shownotes = false;
+    },
+    // 去订单填写页
+    toOrder(data){
+
+    },
   },
   components:{
     swiper, 
     swiperSlide,
+    booking,
   },
 }
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped> 
   .details
     width:100% 
+    position:relative
     .header
       position:relative
       background:#928c8c
@@ -304,7 +419,7 @@ export default {
             overflow:hidden
             background: #F7F7FB
           .reserve
-            margin-right:2%
+            margin-right:1%
             .reserveurl,.introduceurl 
               display:block 
               width:100% 
@@ -330,7 +445,8 @@ export default {
               margin-top:-9px
               font-size:18px
               font-weight:550 
-    .telldiv
+    .telldiv 
+      margin-top:12px 
       background:#fff
       .bt
         padding: 11px 15px 0
@@ -420,4 +536,94 @@ export default {
           border: 1px solid #5CA2F8
           box-sizing: border-box
           border-radius: 40px
+    .notes
+      position:fixed 
+      top:0 
+      left:0 
+      width:100% 
+      height:100% 
+      z-index:300
+      overflow:auto
+      transition: all 0.5s
+      background: rgba(7,17,27,.8)
+      backdrop-filter:blur(10px)
+      &.fade-enter-active, &.fade-leave-active
+        opacity: 1
+        background: rgba(7,17,27,0.8)
+      &.fade-enter, &.fade-leave-to 
+        opacity: 0
+        background: rgba(7,17,27,0) 
+      .close
+        position: relative
+        top: 0
+        left: 0
+        width: 100%
+        height: 10%
+        padding-top: 10%
+        .closeicon
+          display: block
+          width: 100%
+          line-height:40px 
+          margin: 0 auto
+          font-size: 30px
+          color: #fff
+          text-align:center
+      .notesdiv
+        // box-sizing: border-box
+        padding: 20px
+        padding-bottom:70px 
+        border-radius:20px 20px 0px 0px 
+        height:80%
+        background:#fff
+        .testtext
+          width:100% 
+          height:100%
+          overflow-y:scroll
+          .div
+            padding: 10px 0
+            border-bottom: 1px solid #ddd
+            .name
+              font-size: 13px
+              color: #333
+              margin-bottom: 3px
+              font-weight: 600
+            .text
+              margin: 3px 0
+              font-size: 12px
+              color: #666
+              line-height: 12px
+              position: relative
+        .buy 
+          position:fixed
+          display:flex
+          bottom:0px 
+          left:0px 
+          width:100% 
+          height:60px 
+          line-height:60px 
+          z-index:100 
+          background:#fff
+          .buyleft
+            flex:1
+            .nowMPrice
+              float:left 
+              width:40%
+              color: #999
+              font-size: 12px
+              text-align:center
+              overflow:hidden
+            .nowPrice
+              float:left 
+              width:60%
+              font-size:14px 
+              color:#f44
+              text-align:center
+              overflow:hidden
+          .buyright
+            width:110px 
+            font-size:16px 
+            color: #fff
+            background-color: #f44
+            border: 1px solid #f44
+            text-align:center
 </style>

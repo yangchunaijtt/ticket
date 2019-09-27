@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <transition>
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 
@@ -24,6 +26,10 @@ export default {
 </script>
 
 <style lang="stylus"  rel="stylesheet/stylus">
-  
-  
+  .v-enter-active, .v-leave-active 
+    transition: all 0.5s 
+  .v-enter
+    transform: translateX(100%);
+  .v-leave-to
+    transform: translateX(-100%);
 </style>

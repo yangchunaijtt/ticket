@@ -14,12 +14,14 @@
         <div class="item">
           <h2>开放时间</h2>
           <p>
-            {{tosunData.openTime[0].openTimeInfo?tosunData.openTime[0].openTimeInfo:""}}，
-            营业时间：{{tosunData.openTime[0].sightStart}}-{{tosunData.openTime[0].sightEnd}}。
-            <span v-show="tosunData.openTime[1]?tosunData.openTime[1]:false">
-              {{tosunData.openTime[1].openTimeInfo?tosunData.openTime[1].openTimeInfo:''}}，
-              营业时间：{{tosunData.openTime[1].sightStart?tosunData.openTime[1].sightStart:''}}
-              -{{tosunData.openTime[1].sightEnd?tosunData.openTime[1].sightEnd:''}}。
+            {{tosunData.openTime instanceof Array?tosunData.openTime[0].openTimeInfo?tosunData.openTime[0].openTimeInfo:"":tosunData.openTime.openTimeInfo?tosunData.openTime.openTimeInfo:""}}，
+            营业时间：
+            {{tosunData.openTime instanceof Array?tosunData.openTime[0].sightStart:tosunData.openTime.sightStart}}-{{tosunData.openTime instanceof Array?tosunData.openTime[0].sightEnd:tosunData.openTime.sightEnd}}。
+            <span v-show="tosunData.openTime instanceof Array?tosunData.openTime[1]?tosunData.openTime[1]:false:tosunData.openTime?tosunData.openTime:false">
+              {{tosunData.openTime instanceof Array?tosunData.openTime[1].openTimeInfo?tosunData.openTime[1].openTimeInfo:'':tosunData.openTime.openTimeInfo?tosunData.openTime.openTimeInfo:''}}，
+              营业时间：
+              {{tosunData.openTime instanceof Array?tosunData.openTime[1].sightStart:tosunData.openTime.sightStart}}
+              -{{tosunData.openTime instanceof Array?tosunData.openTime[1].sightEnd:tosunData.openTime.sightEnd}}。
             </span>
           </p>
           <h2>免票政策</h2>
@@ -95,7 +97,9 @@ export default {
     },
     toIntroduce(){
       this.showPage = "introduce";
-    }
+    },
+    // 监控数据
+    
   },
   created(){
 

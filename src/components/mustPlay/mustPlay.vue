@@ -22,6 +22,7 @@
           </router-link>
         </li>
       </ul>
+      </v-touch>
     </div>
   </div>
 </template>
@@ -94,8 +95,17 @@ export default {
       playArr:[]
     }
   },
+  methods:{
+     swiperleft: function () {
+      this.$router.push({'path':'/queuehistory'});
+    },
+    swiperright: function () {
+      this.$router.push({'path':'/home'});
+    },
+  },
   mounted(){
     // this.playArr = this.;
+   
   },
 }
 </script>

@@ -9,6 +9,10 @@ import tour  from "@/components/tour/tour"
 import city  from "@/components/city/city"
 import toknow from "@/components/toknow/toknow"
 import searchv from "@/components/searchv/searchv"
+import order from "@/components/order/order"
+import time from "@/components/time/time"
+import orderlist from "@/components/orderlist/orderlist"
+
 
 Vue.use(Router)
 
@@ -53,6 +57,21 @@ export default new Router({
       path:"/searchv",
       name:"searchv",
       component:searchv
-    }
+    },
+    {
+      path:"/order",
+      name:"order",
+      component:order
+    },
+    {
+      path:"/time",
+      name:"time",
+      component:time
+    },
+    {
+      path:"/orderlist",
+      name:"orderlist",
+      component:orderlist
+    },
   ]
 })

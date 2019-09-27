@@ -5,7 +5,7 @@
         <i class="icon iconfont iconzuo1"  @click="returnLeft"></i>
         <div class="frame">
           <i class="icon iconfont iconsousuo"></i>
-          <input type="text" placeholder="景点/城市" class="text"  v-model="inputVal">
+          <input type="text" placeholder="景点/城市" class="text"  v-model="inputVal" @keyup.enter="inputSubmit">
         </div>
       </div>
     </div>
@@ -39,17 +39,19 @@ export default {
       ],
       timeout:null,
       inputVal:"",
+      isInput:false,
     }
   },
   watch: {
     inputVal(newValue) {
         // 实现input连续输入，只发一次请求
+       
         clearTimeout(this.timeout);
         // console.log(newValue);
         this.timeout = setTimeout(() => {
           // console.log(newValue);
           this.$router.push({path:'/tour',query: {search:newValue}})
-        }, 2000);
+        }, 3000);
     }
   },
   methods:{
@@ -64,13 +66,16 @@ export default {
         if ( E.target.value.trim().length!==0 ){
             t1 = window.setTimeout(function(){
             console.log(E.target.value);
-          },1500)
+          },3000)
         }
       }else {
         window.clearTimeout(t1) // 去除定时器
       }
       
-    }
+    },
+    inputSubmit(){
+       this.$router.push({path:'/tour',query: {search:this.inputVal}})
+    },
   },
  
 }

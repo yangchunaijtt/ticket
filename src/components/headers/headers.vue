@@ -19,7 +19,7 @@
         </div>
         <div class="people">
           <router-link to="/land" v-show="!LoadData.isLoad" class="toload">登陆</router-link>
-          <span class="load icon iconfont iconren" v-show="LoadData.isLoad"></span>
+          <router-link to="/orderlist" class="load icon iconfont iconren" v-show="LoadData.isLoad"></router-link>
         </div>
       </div>
     </div>
@@ -36,7 +36,7 @@ export default {
   data(){
     return{
       LoadData:{
-        isLoad:false
+        isLoad:true
       },
       isScroll:false
     }
@@ -181,7 +181,8 @@ export default {
             color: #1d1de0
             font-size: 16px
           .load
-            font-size:20px
+            font-size:22px
+            // color:#19a0f0
     .isscroll
       background:#fff 
       border-bottom:1px solid #efecec

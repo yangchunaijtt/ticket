@@ -1,12 +1,21 @@
 <template>
   <div class="city">
-    城市选择页
+   
   </div>
 </template>
 
 <script>
+// import city from 'vue-city';
+
 export default {
-  
+  data(){
+    return {
+
+    }
+  },
+  methods:{
+
+  },
 }
 </script>
 
