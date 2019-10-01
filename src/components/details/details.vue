@@ -153,7 +153,7 @@
               <span class="nowMPrice">原价：￥{{noticesData.nowMPrice}}</span>
               <span class="nowPrice">在线付：￥{{noticesData.nowPrice}}</span>
             </div>
-            <div class="buyright" @click="">
+            <div class="buyright" @click="resserve(noticesData)">
               立即预定
             </div>
           </div>
@@ -308,6 +308,10 @@ export default {
     toOrder(data){
 
     },
+    // 预定调整到详情页组件
+    resserve(data){
+      console.log("预定",data);
+    }
   },
   components:{
     swiper, 
@@ -574,11 +578,11 @@ export default {
         padding-bottom:70px 
         border-radius:20px 20px 0px 0px 
         height:80%
+        overflow-y:scroll
         background:#fff
         .testtext
           width:100% 
           height:100%
-          overflow-y:scroll
           .div
             padding: 10px 0
             border-bottom: 1px solid #ddd
@@ -612,6 +616,7 @@ export default {
               font-size: 12px
               text-align:center
               overflow:hidden
+              
             .nowPrice
               float:left 
               width:60%

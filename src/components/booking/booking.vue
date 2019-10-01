@@ -28,7 +28,7 @@
                 </div>
                 <div class="day clearfix">
                   <span class="time">指定游玩日内有效</span>
-                  <span class="reserve">预定</span>
+                  <span class="reserve" @click="reserve(priceitem)">预定</span>
                 </div>
                 <div class="mustknow clearfix" @click="fatherClick(priceitem.id)">
                   预订须知
@@ -214,7 +214,10 @@ export default {
       
       return classify_arr;
     },
-    
+    // 调用父组件的预定须知信息
+    reserve(data){
+       this.$parent.resserve(data);
+    },
   },
 }
 </script>
