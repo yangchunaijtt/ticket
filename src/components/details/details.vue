@@ -310,7 +310,25 @@ export default {
     },
     // 预定调整到详情页组件
     resserve(data){
-      console.log("预定",data);
+      // let orderData = 
+      // console.log(this.detailsGetData,"预定",data);
+      console.log("门票的信息", this.detailsGetData.productId);
+      console.log("门票的信息", this.detailsGetData.goodsId);
+
+      // 先要判断下登录还是未登录
+      // if () {
+
+      // }else {
+
+      // }
+      this.$router.push({
+        name: "order",
+        query: {
+          id: data.id,
+          goodsid: data.goodsId,
+          product: this.detailsGetData.productId
+        }
+      });
     }
   },
   components:{

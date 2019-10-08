@@ -97,6 +97,13 @@
       "unicode_decimal": 58885
     },
     {
+      "icon_id": "1183135",
+      "name": "错误",
+      "font_class": "cuowu1",
+      "unicode": "e67a",
+      "unicode_decimal": 59002
+    },
+    {
       "icon_id": "1268730",
       "name": "人民币",
       "font_class": "renminbi1688",
@@ -312,6 +319,13 @@
       "font_class": "zuo1",
       "unicode": "e688",
       "unicode_decimal": 59016
+    },
+    {
+      "icon_id": "8081353",
+      "name": "错误",
+      "font_class": "iconfront-",
+      "unicode": "e606",
+      "unicode_decimal": 58886
     },
     {
       "icon_id": "8224835",

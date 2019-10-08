@@ -45,6 +45,9 @@ time.vue
 16：订票须知组件
 notice.vue
 
+17:popticketInfo.vue
+订单页order中的订单须知提示部分内容。
+
 二：使用到的插件
 
 
