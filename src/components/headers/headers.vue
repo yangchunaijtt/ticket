@@ -7,10 +7,10 @@
           <i class="iconfont iconzuo1"></i>
         </div>
         <div class="select">
-          <router-link to="/city"   class="tocity" >
+          <div  class="tocity" @click="showChoiceCity">
             <span class="cityname">常州</span>
             <i class="iconfont iconxiala-"></i>
-          </router-link>
+          </div>
           <div class="head-txt">
             <span class="search iconfont iconsousuo">
             </span>
@@ -61,6 +61,10 @@ export default {
     },
     toSearchv(){
       this.$router.push({path:'/searchv'});
+    },
+    // 显示选择城市
+    showChoiceCity(){
+      this.$parent.showCityClick();
     },
   },  
 }

@@ -53,6 +53,12 @@ https://segmentfault.com/a/1190000013284700
 https://github.com/TangSY/vue-hash-calendar
 
 
+九：better-scroll
+1：实现左右联动
+https://blog.csdn.net/mm_hello11/article/details/89048147
+2:实现左右轮动，好的文档
+https://www.cnblogs.com/zhoulifeng/p/9646296.html
+
 
 代码注意部分
 1：v-for需要绑定下keys，来提高效率 

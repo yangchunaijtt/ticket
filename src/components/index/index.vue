@@ -4,6 +4,8 @@
     <screen></screen>
     <must-play :goodList="goodList"></must-play>
     <popular :goodList="goodList"></popular>
+    <!-- 城市选择组件 -->
+    <choiceCity v-show="showCity"></choiceCity>
   </div>
 </template>
 
@@ -12,6 +14,7 @@ import header from "@/components/headers/headers.vue"
 import mustPlay from "@/components/mustPlay/mustPlay.vue"
 import screen from "@/components/screen/screen.vue"
 import popular from "@/components/popular/popular.vue"
+import choiceCity from "@/components/choiceCity/choiceCity.vue"
 
 // 请求部分配置和引入
 import https from "../../https.js"
@@ -30,6 +33,8 @@ export default {
   data(){
     return {
      goodList:{},
+    //  城市选择
+    showCity:false,
     }
   },
   created(){
@@ -51,13 +56,16 @@ export default {
     
   },
   methods:{
-   
+    showCityClick(){
+      this.showCity = !this.showCity;
+    },
   },
   components:{
     'v-header':header,
     "must-play":mustPlay,
     "screen":screen,
     "popular":popular,
+    choiceCity,
   }
 }
 </script>

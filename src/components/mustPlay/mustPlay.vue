@@ -8,7 +8,7 @@
       </router-link>
     </div>
     <div class="scroll">
-      <ul class="center">
+      <ul class="center"  :style="{'width':centerWidth+'px'}">
         <li class="item"  v-for="(item, index) in goodList.productInfos?goodList.productInfos.slice(2,8):{}" :keys="index">
           <router-link :to="{path:'/details',query:{id:item.id}}" class="itemA">
             <img v-lazy="item.images[0]" class="img">
@@ -22,7 +22,6 @@
           </router-link>
         </li>
       </ul>
-      </v-touch>
     </div>
   </div>
 </template>
@@ -103,9 +102,18 @@ export default {
       this.$router.push({'path':'/home'});
     },
   },
+  computed:{
+    // 动态渲染宽度
+    centerWidth(){
+      if ( null ==  this.goodList || null == this.goodList.productInfos  || this.goodList.productInfos.length >=6 ){
+        return 6*146;
+      }else if ( this.goodList.productInfos.length < 6) {
+        return this.goodList.productInfos.length?this.goodList.productInfos.length*146:1
+      }
+    },
+  },
   mounted(){
-    // this.playArr = this.;
-   
+
   },
 }
 </script>
@@ -130,14 +138,13 @@ export default {
           font-size:10px
     .scroll
       width:100%
-      overflow:hidden
+      overflow-y:hidden
+      overflow-x: auto
+      max-height:160px
       .center
         padding: 9px 0 5px 10px
         width:1022px
-        overflow-x: scroll
-        overflow-y: hidden 
         max-height: 160px
-        // overflow:hidden
         .item
           position:relative
           float:left

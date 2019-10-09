@@ -6,7 +6,6 @@ import index from "@/components/index/index"
 import land  from "@/components/land/land"
 import details  from "@/components/details/details"
 import tour  from "@/components/tour/tour"
-import city  from "@/components/city/city"
 import toknow from "@/components/toknow/toknow"
 import searchv from "@/components/searchv/searchv"
 import order from "@/components/order/order"
@@ -42,11 +41,6 @@ export default new Router({
       path: '/tour',
       name: 'tour',
       component:tour
-    },
-    {
-      path: '/city',
-      name: 'city',
-      component:city
     },
     {
       path:"/toknow",

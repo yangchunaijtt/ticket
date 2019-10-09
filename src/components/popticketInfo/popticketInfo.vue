@@ -154,6 +154,7 @@ export default {
         font-size:14px 
     .center
       overflow-y: auto
+      padding:10px
       .scroll-item
         padding: 10px 0
         border-bottom: 1px solid #ddd
