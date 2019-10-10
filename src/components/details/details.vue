@@ -110,7 +110,7 @@
     <transition name ="fade">
       <div class="notes" v-show="shownotes" v-if="noticesData" >
         <div class="close" @click="closeNotes">
-          <i class="closeicon iconfont iconcuo"></i>
+          
         </div>
         <div class="notesdiv">
           <div class="testtext">
@@ -249,7 +249,13 @@ export default {
         if ( data.status == ERR_OK ) {
           this.detailsGetData = data.data.data;
           // 赋值图片
-          this.banner = this.detailsGetData.images.image
+          console.log()
+          if (this.detailsGetData.images.image.length >=9) {
+            this.banner = this.detailsGetData.images.image.slice(0,9);
+          }else {
+            this.banner = this.detailsGetData.images.image;
+          }
+          
 
           // console.log(this.detailsGetData.goodsList);
 
@@ -580,8 +586,8 @@ export default {
         top: 0
         left: 0
         width: 100%
-        height: 10%
-        padding-top: 10%
+        height: 100%
+        z-index:100
         .closeicon
           display: block
           width: 100%
@@ -592,12 +598,16 @@ export default {
           text-align:center
       .notesdiv
         // box-sizing: border-box
+        position:fixed
+        bottom:60px 
+        left:0 
         padding: 20px
         padding-bottom:70px 
         border-radius:20px 20px 0px 0px 
-        height:80%
-        overflow-y:scroll
+        height:50%
+        overflow-y:auto
         background:#fff
+        z-index:300
         .testtext
           width:100% 
           height:100%

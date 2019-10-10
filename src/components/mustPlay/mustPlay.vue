@@ -38,59 +38,7 @@ export default {
   },
   data(){
     return {
-      mustPlayData:{
-        "errno": 0,
-        "data": [{
-            "name": "常州恐龙园",
-            "img": "https://pics.lvjs.com.cn//uploads/pc/place2/2019-09-02/a8384e00-d3b5-4645-8749-9214cb3dac6f_480_320.jpg",
-            "price": 24,
-            "label":"主题公园",
-            "degree":"95"
-          },
-          {
-            "name": "常州恐龙园",
-            "img": "https://pics.lvjs.com.cn//uploads/pc/place2/2019-09-02/a8384e00-d3b5-4645-8749-9214cb3dac6f_480_320.jpg",
-            "price": 645,
-            "label":"主题公园",
-            "degree":"95"
-          },
-          {
-            "name": "常州恐龙园xxx",
-            "img": "https://pics.lvjs.com.cn//uploads/pc/place2/2019-09-02/a8384e00-d3b5-4645-8749-9214cb3dac6f_480_320.jpg",
-            "price": 145,
-            "label":"主题公园",
-            "degree":"95"
-          },
-          {
-            "name": "常州恐龙园aaa",
-            "img": "https://pics.lvjs.com.cn//uploads/pc/place2/2019-09-02/a8384e00-d3b5-4645-8749-9214cb3dac6f_480_320.jpg",
-            "price": 245,
-            "label":"主题公园",
-            "degree":"95"
-          },
-          {
-            "name": "常州恐龙园sss",
-            "img": "https://pics.lvjs.com.cn//uploads/pc/place2/2019-09-02/a8384e00-d3b5-4645-8749-9214cb3dac6f_480_320.jpg",
-            "price": 235,
-            "label":"主题公园",
-            "degree":"95"
-          },
-          {
-            "name": "常州恐龙园ddd",
-            "img": "https://pics.lvjs.com.cn//uploads/pc/place2/2019-09-02/a8384e00-d3b5-4645-8749-9214cb3dac6f_480_320.jpg",
-            "price": 445,
-            "label":"主题公园",
-            "degree":"95"
-          },
-          {
-            "name": "常州恐龙园222",
-            "img": "https://pics.lvjs.com.cn//uploads/pc/place2/2019-09-02/a8384e00-d3b5-4645-8749-9214cb3dac6f_480_320.jpg",
-            "price": 24522,
-            "label":"主题公园",
-            "degree":"95"
-          }
-        ]
-      },
+
       playArr:[]
     }
   },
@@ -160,6 +108,7 @@ export default {
             height:100%
             .img
               width:100% 
+              min-height:90.6px
             .today  
               position: absolute;
               top: 0

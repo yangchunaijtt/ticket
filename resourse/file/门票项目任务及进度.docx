@@ -103,3 +103,12 @@ Ticket未完成部分内容
 已完成
 1：登录页面完成，出现些问题，需要下次再测试改。
 2:老项目的time组件在formorder中使用
+
+
+
+10.10号
+一：资料
+1：pages/formorder.vue 
+是下单组件
+2：components/pcalendar.vue 
+是时间组件

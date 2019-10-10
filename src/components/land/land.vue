@@ -7,16 +7,19 @@
     </mt-header>
     <div class="content">
       <div class="phone">
-        <mt-field label="手机号" :placeholder="phoneTest"  type="number" v-model="phoneNumber" ></mt-field>
+        <mt-field label="手机号"  :placeholder="phoneTest"  type="number" v-model="phoneNumber"   @blur.native.capture="phoneBlur"></mt-field>
       </div>
+      <div v-show="phoneNumberNo" class="testtext">手机号格式不正确</div>
       <div class="code">
         <div class="left">
-          <mt-field label="短信验证码" placeholder="请输入短线验证码" type="number" v-model="codeNumber"></mt-field>
+          <mt-field label="短信验证码" placeholder="请输入短线验证码" type="number" v-model="codeNumber"
+            @blur.native.capture="codeBlur"></mt-field>
         </div>
         <div class="right" @click="sendCode">
           <mt-button type="primary" >{{buttonstr}}</mt-button>
         </div>
       </div>
+      <div v-show="codeNumberNo" class="testtext">验证码格式不正确</div>
       <div class="deng">
         <mt-button @click.native="landId" size="large">{{loginstr}}</mt-button>
       </div>
@@ -37,9 +40,11 @@ let sec = 59;
 export default {
   data(){
     return { 
-      phoneNumber:"", //用户手机号
+      phoneNumber:null, //用户手机号
+      phoneNumberNo:false,
       phoneTest:"请输入手机号",
-      codeNumber:"",
+      codeNumber:null,
+      codeNumberNo:false,
       canuse:null,
       buttonstr:"发送验证码",
       loginstr:"登录",
@@ -78,6 +83,7 @@ export default {
           clearInterval(smsloop);
         }
       }, 1000);
+
     },
     async landId(){  // 登录操作
       if ( this.phoneNumber === "" ) {
@@ -162,6 +168,24 @@ export default {
         this.loginbuttonstatus = "登陆";
       }
     },
+    // 检验手机号和验证码的输入
+    phoneBlur(){
+      // console.log(11);
+      if (this.phoneNumber === "") {
+        this.phoneNumberTest = "请填写手机号";
+      }else if(!(/^1[3456789]\d{9}$/.test(this.phoneNumber))){ 
+        // 错误
+        this.phoneNumberNo = true;        
+        
+      }else {
+        // 对
+
+        this.phoneNumberNo = false; 
+      }
+    },
+    codeBlur(){
+
+    },
   },
   watch:{
     phoneNumber(newValue){
@@ -181,6 +205,16 @@ export default {
       top:60px
       .phone
         width:100%
+        border-bottom:none!important
+        .mint-cell mint-field
+          border-bottom:none!important
+      .testtext
+        // background:#fff
+        text-indent:105px
+        line-height:16px 
+        color: #f44
+        font-size: 12px
+        text-align:left
       .code 
         display:flex
         width:100% 

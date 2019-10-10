@@ -8,7 +8,7 @@
         </div>
         <div class="select">
           <div  class="tocity" @click="showChoiceCity">
-            <span class="cityname">常州</span>
+            <span class="cityname">{{iscityname}}</span>
             <i class="iconfont iconxiala-"></i>
           </div>
           <div class="head-txt">
@@ -28,10 +28,10 @@
 <script>
 export default {
   props:{
-    // isScroll:{
-    //   type:Boolean,
-    //   default:false
-    // }
+    iscityname:{
+      type:String,
+      default:"常州"
+    }
   },
   data(){
     return{

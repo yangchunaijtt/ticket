@@ -11,11 +11,11 @@
       <li class="item"   v-for="(item, index) in goodList.productInfos" >
         <router-link :to="{path:'/details',query:{id:item.id}}">
           <div class="center">
-            <img v-lazy="item.images[0]" width="100" class="img">
+            <img v-lazy="item.images[0]" width="95" class="img">
             <div class="today"></div>
             <div class="words">
               <p class="name">{{item.productName}}</p>
-              <div class="label">{{item.productTheme[0]}}</div>
+              <div class="label" v-show="item.productTheme.length>0">{{item.productTheme[0]}}</div>
               <p class="dgree">98%满意度</p>
               <div class="price">￥{{item.minPrice}}起</div>
             </div>

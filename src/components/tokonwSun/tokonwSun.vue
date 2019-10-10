@@ -14,15 +14,7 @@
         <div class="item">
           <h2>开放时间</h2>
           <p>
-            {{tosunData.openTime instanceof Array?tosunData.openTime[0].openTimeInfo?tosunData.openTime[0].openTimeInfo:"":tosunData.openTime.openTimeInfo?tosunData.openTime.openTimeInfo:""}}，
-            营业时间：
-            {{tosunData.openTime instanceof Array?tosunData.openTime[0].sightStart:tosunData.openTime.sightStart}}-{{tosunData.openTime instanceof Array?tosunData.openTime[0].sightEnd:tosunData.openTime.sightEnd}}。
-            <span v-show="tosunData.openTime instanceof Array?tosunData.openTime[1]?tosunData.openTime[1]:false:tosunData.openTime?tosunData.openTime:false">
-              {{tosunData.openTime instanceof Array?tosunData.openTime[1].openTimeInfo?tosunData.openTime[1].openTimeInfo:'':tosunData.openTime.openTimeInfo?tosunData.openTime.openTimeInfo:''}}，
-              营业时间：
-              {{tosunData.openTime instanceof Array?tosunData.openTime[1].sightStart:tosunData.openTime.sightStart}}
-              -{{tosunData.openTime instanceof Array?tosunData.openTime[1].sightEnd:tosunData.openTime.sightEnd}}。
-            </span>
+            {{tosunData.openTime instanceof Array?tosunData.openTime[0].openTimeInfo?tosunData.openTime[0].openTimeInfo:"":tosunData.openTime.openTimeInfo?tosunData.openTime.openTimeInfo:""}}
           </p>
           <h2>免票政策</h2>
           <p v-show="tosunData.bookingInfo.freePolicy?tosunData.bookingInfo.freePolicy:false">
@@ -69,8 +61,8 @@
           <p class="text">
             {{item.playInfo}}
           </p>
-          <div class="images"  v-for="(imgitem, index) in item.playImages.url" :keys="index" >
-            <img v-lazy="imgitem" class="img" width="100%">
+          <div class="images" >
+            <img v-lazy="item.playImages.url" class="img" width="100%">
           </div> 
         </div>
       </div>

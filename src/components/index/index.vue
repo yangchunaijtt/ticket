@@ -1,6 +1,6 @@
 <template>
   <div class="index">
-    <v-header></v-header>
+    <v-header :iscityname="iscityname"></v-header>
     <screen></screen>
     <must-play :goodList="goodList"></must-play>
     <popular :goodList="goodList"></popular>
@@ -22,7 +22,7 @@ import https from "../../https.js"
 const ERR_OK = 200;
 const index_url =  "http://58.216.175.118:86/api/LvmamaScenicTickets/ProductLocalInfos/GetProductInfosList";
 let index_url_data ={
-  placeCity: '常州',
+  placeCity: '',
   hasPrice: true,
   pageIndex: 1,
   productStatus: 1,
@@ -33,24 +33,26 @@ export default {
   data(){
     return {
      goodList:{},
-    //  城市选择
-    showCity:false,
+      //  城市选择
+      showCity:false,
+      // 城市名
+      iscityname:"",
     }
   },
   created(){
     // console.log(index_url_data);
-    https.fetchPost(index_url,index_url_data ).then((data) => {
-          // console.log("取到数据",data,data.status);
-          if ( data.status == ERR_OK ) {
-            this.goodList = data.data.data
-            console.log(this.goodList);
-          }else{
-            console.log("发送错误",data.status);
-          }
-      }).catch( err=> {
-              console.log("发生错误",err)
-          }
-    );
+    
+    // 读取存储的城市名
+    
+    if (this.$cookies.isKey("cityname")) {
+      this.iscityname = this.$cookies.get("cityname")
+    }else {
+      this.iscityname = "常州"
+      this.$cookies.set("cityname",this.iscityname);
+    }
+    // console.log(this.iscityname);
+    this.ajaxData(this.iscityname);
+
   },
   mounted(){
     
@@ -59,6 +61,25 @@ export default {
     showCityClick(){
       this.showCity = !this.showCity;
     },
+    // 发送取数据
+    ajaxData(cityname){
+      index_url_data.placeCity = cityname;
+      this.iscityname = cityname;
+      this.$cookies.set("cityname",this.iscityname);
+      console.log(cityname);
+      https.fetchPost(index_url,index_url_data ).then((data) => {
+          // console.log("取到数据",data,data.status);
+            if ( data.status == ERR_OK ) {
+              this.goodList = data.data.data
+              console.log(this.goodList);
+            }else{
+              console.log("发送错误",data.status);
+            }
+        }).catch( err=> {
+                console.log("发生错误",err)
+            }
+      );
+    }
   },
   components:{
     'v-header':header,

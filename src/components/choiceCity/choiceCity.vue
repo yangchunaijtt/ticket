@@ -5,24 +5,26 @@
         <i class="returnleft iconfont iconzuo1" @click="returnLeft"></i>
         <span class="title">选择城市</span>
       </div>
-      <div class="content">
-        <div class="leftitem">
-          <div class="item" v-for="(item,index) in cityData" :key="index">
-            <h3 class="title">
-              {{item.name}}
-            </h3>
-            <p class="cities" v-for="(cityitem,index) in item.cities" :key="index">
-              <span class="name">
-                {{cityitem.name}}
-              </span>
-            </p>
+      <div class="content" :style="{'height':rightitemHeight+'px'}"  ref="viewBox">
+        <div class="contentdiv">
+          <div class="leftitem">
+            <div class="item" v-for="(item,index) in cityData" :key="index">
+              <h3 class="title">
+                {{item.name}}
+              </h3>
+              <p class="cities" v-for="(cityitem,index) in item.cities" :key="index">
+                <span class="name"  @click="selectedCity(cityitem.name)">
+                  {{cityitem.name}}
+                </span>
+              </p>
+            </div>
           </div>
-        </div>
-        <div class="rightitem" :style="{'height':rightitemHeight+'px'}">
-          <div v-for="(item,index) in cityData" :key="index" class="itemname">
-            
-              {{item.name}}
-            
+          <div class="rightitem" :style="{'height':rightitemHeight+'px'}">
+            <div v-for="(item,index) in cityData" :key="index" class="itemname" @click="moveScroll(index)">
+              <p class="text" :class="index===scrollIndex?'on':'off'">
+                {{item.name}}
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -1959,24 +1961,54 @@ export default {
         }
       ],
       // 滑动插件需要的数据
-      listHeight: [],
-      scrollY: 0, //实时获取当前y轴的高度 
-      clickEvent: false,
+      scrollIndex:0,  // 目前滑动所在的地方
+
     };
   },
   methods: {
     returnLeft(){
       this.$parent.showCityClick();
     },  
+    // 滑动监控的方法
+    scrollListener:function(){  //监听滑动事件
+        this.box = this.$refs.viewBox
+        this.box.addEventListener('scroll', () => {
+            // console.log(this.$refs.viewBox.scrollTop)
+        }, false)
+      //  this.$refs.viewBox.scrollTop = 1300
+    },
+    moveScroll(index){
+      this.scrollIndex = index;
+      let topNumber = 0;
+      for ( let i = 0;i<this.cityData.length;i++){
+        if ( index === i ) {
+          break;
+        }else {
+          topNumber += 17+ this.cityData[i].cities.length*45;
+        }
+      }
+      // console.log(index,topNumber);
+      this.$refs.viewBox.scrollTop = topNumber -17;
+    },
+    // 选中城市
+    selectedCity(name){
+      // console.log(name);
+      name = name.split("市")[0];
+      this.$parent.showCityClick();
+      this.$parent.ajaxData(name);
+      // console.log(name);
+    }
   },
   mounted () {
-   console.log(this.$refs.wrapper,this.cityData.length);
+    //  console.log(this.$refs.wrapper,this.cityData.length);
+    // 注册滑动监听事件
+    this.scrollListener();
+    
   },
   computed: {
     rightitemHeight(){
       return document.body.offsetHeight - 45;
     },
-
   },
 }
 </script>
@@ -2026,37 +2058,48 @@ export default {
       position:relative 
       top:45px 
       width:100%
-      .leftitem
+      overflow-y:auto
+      overflow-x:hidden
+      .contentdiv
         width:100%
-        .item
-          .title
-            height:17px 
-            line-height:17px 
-            font-size:15px 
-            color:#222
-            background-color:#f4f4f4
-            text-indent:15px 
-          .cities
-            padding:0px 15px
-            border-bottom:1px solid #f4f4f4
-            .name
-              padding:10px 0px 
-              display:block
-              line-height:24px 
-              font-size:14px 
-              color:#333
-            &:last-child
-                border-bottom:none
-      .rightitem
-        position:fixed 
-        right:0 
-        top:45px 
-        width:32px
-        margin-top:4%
-        .itemname
-          height:4%
-          text-align:center
-          color:#333
-          font-size:15px 
+        .leftitem
+          width:100%
+          .item
+            .title
+              height:17px 
+              line-height:17px 
+              font-size:15px 
+              color:#222
+              background-color:#f4f4f4
+              text-indent:15px 
+            .cities
+              padding:0px 15px
+              border-bottom:1px solid #f4f4f4
+              .name
+                padding:10px 0px 
+                display:block
+                line-height:24px 
+                font-size:14px 
+                color:#333
+              &:last-child
+                  border-bottom:none
+        .rightitem
+          position:fixed 
+          right:0 
+          top:45px 
+          width:32px
+          margin-top:4%
+          .itemname
+            height:4%
+            text-align:center
+            color:#333
+            .text
+              font-size:15px 
+              height:16px 
+              width:16px
+            .on 
+               border-bottom:1px solid #b3b1b1
+            .off 
+              border-bottom:none
           
 </style>
