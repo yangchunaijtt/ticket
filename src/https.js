@@ -3,7 +3,7 @@ import qs from 'qs'
 
 axios.defaults.timeout = 8000;                  //响应时间
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';        //配置请求头
-axios.defaults.baseURL = 'http://192.168.1.7:8090/';   //配置接口地址
+axios.defaults.baseURL = 'http://58.216.175.118:86/'; //配置接口地址
 
 //POST传参序列化(添加请求拦截器)
 axios.interceptors.request.use((config) => {

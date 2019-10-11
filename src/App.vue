@@ -8,6 +8,7 @@
 
 <script>
 
+import { mapState, mapActions } from "vuex";
 import https from "@/https.js"
 
 export default {
@@ -15,6 +16,17 @@ export default {
     return {
 
     }
+  },
+  computed:{
+    
+    ...mapState({
+      route: state => state.route,
+      path: state => state.route.path,
+      deviceready: state => state.app.deviceready,
+      demoTop: state => state.vux.demoScrollTop,
+      isLoading: state => state.vux.isLoading,
+      direction: state => state.vux.direction
+    }),
   },
   created(){
     

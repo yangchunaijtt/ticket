@@ -23,8 +23,8 @@
         </router-link>
       </li>
     </ul>
-    <router-link :to='{path:"/tour",query:{search:"常州"}}' class="bottom">
-      更多常州景点
+    <router-link :to='{path:"/tour",query:{search:iscityname}}' class="bottom">
+      更多{{iscityname}}景点
     </router-link>
   </div>
 </template>
@@ -34,6 +34,10 @@ export default {
     goodList:{
       type:Object,
       default:{}
+    },
+    iscityname:{
+      type:String,
+      default:""
     }
   },
   data(){

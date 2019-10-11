@@ -1,74 +1,193 @@
 <template>
   <div class="land">
-    <mt-header title="登录">
-      <router-link to="/index" slot="left">
-        <mt-button icon="back"></mt-button>
-      </router-link>
-    </mt-header>
-    <div class="content">
-      <div class="phone">
-        <mt-field label="手机号"  :placeholder="phoneTest"  type="number" v-model="phoneNumber"   @blur.native.capture="phoneBlur"></mt-field>
-      </div>
-      <div v-show="phoneNumberNo" class="testtext">手机号格式不正确</div>
-      <div class="code">
-        <div class="left">
-          <mt-field label="短信验证码" placeholder="请输入短线验证码" type="number" v-model="codeNumber"
-            @blur.native.capture="codeBlur"></mt-field>
-        </div>
-        <div class="right" @click="sendCode">
-          <mt-button type="primary" >{{buttonstr}}</mt-button>
-        </div>
-      </div>
-      <div v-show="codeNumberNo" class="testtext">验证码格式不正确</div>
-      <div class="deng">
-        <mt-button @click.native="landId" size="large">{{loginstr}}</mt-button>
-      </div>
+    <van-nav-bar title="登陆"
+                 fixed
+                 left-arrow
+                 @click-left="onClickLeft" />
+    <van-cell-group>
+      <van-field label="手机号"
+                 placeholder="请输入手机号"
+                 :error="isPhoneerror"
+                 :error-message="phoneerrorMessage"
+                 v-model="phonenum">
+      </van-field>
+      <van-field center
+                 v-model="sms"
+                 label="短信验证码"
+                 placeholder="请输入短信验证码"
+                 icon="clear"
+                 @click-icon="sms = ''">
+        <van-button slot="button"
+                    size="small"
+                    type="primary"
+                    @click="sendSms"
+                    :disabled="canuse">{{buttonstr}}</van-button>
+      </van-field>
+    </van-cell-group>
+    <div class="login-button">
+      <van-button size="normal"
+                  bottom-action
+                  class="buttong"
+                  :loading="isloading"
+                  @click="clicktologin"
+                  :disabled="canlogin"> {{loginstr}}</van-button>
     </div>
   </div>
 </template>
 <script>
-import { Header,Field ,Button } from 'mint-ui';
+
+import { Row, Col, Field, NavBar, Cell, CellGroup, Button } from "vant";
 
 // 请求部分配置和引入
 import https from "../../https.js"
 
 const ERR_OK = 200;
-const code_url =  "http://m.czgdly.com/transportation/login/sendcode.asp";
+const land_url =  "http://m.czgdly.com/transportation/login/sendcode.asp";
+
 
 let sec = 59;
 
 export default {
+
+  name:"land",
   data(){
     return { 
-      phoneNumber:null, //用户手机号
-      phoneNumberNo:false,
-      phoneTest:"请输入手机号",
-      codeNumber:null,
-      codeNumberNo:false,
-      canuse:null,
-      buttonstr:"发送验证码",
-      loginstr:"登录",
+      currentuid: 0,
+      phoneerrorMessage: "",
+      fullPath: "/",
       canlogin: false,
-      isloading:false,
+      loginstr: "登陆",
+      isloading: false,
+      phonenum: "",
+      sms: "",
+      canuse: false,
+      buttonstr: "发送验证码"
+    }
+  },
+  computed: {
+    isPhoneerror() {
+      if (!this.$checkphone(this.phonenum)) {
+        this.phoneerrorMessage = "手机号码格式不正确";
+        this.canlogin = true;
+      } else {
+        this.phoneerrorMessage = "";
+        this.canlogin = false;
+      }
+      return !this.$checkphone(this.phonenum);
+
     }
   },
   methods:{
-    sendCode(){  // 发送验证码
-      
-      this.canuse = true;
-      if (  this.phoneNumber == "") {
-        this.phoneTest = "请重新输入手机号"
-        return 
-      }
-      if ( sec != 59) {
-        return ;
-      }
-      // 发送请求
-      https.fetchPost(code_url ,{ tel: this.phoneNumber, c: "1" }).then((data) => {
-        // console.log("取到数据",data,data.status);
-          console.log("发送验证码返回的信息", data);
+    async clicktologin() {
+      this.isloading = true;
+      this.loginstr = "登陆中。。";
+      this.canlogin = true;
+      try {
+
+        http.fetchGet("http://m.czgdly.com/transportation/login/sendcode.asp",{
+            c: "2",
+            tel: this.phonenum,
+            name: this.phonenum,
+            val: this.sms,
+            wherefrom: this.$cookies.get("WHERE"),
+            tuijian: window.localStorage.getItem("agency")
+        }).then( (data) => {
+          const res_login = data;
+                    if (res_login.data.message == "success") {
+                        this.loginstr = "登陆成功";
+                        this.isloading = false;
+                        this.$cookies.set("gdmobileusername", this.phonenum, 1 * 60 * 60);
+                        this.$cookies.set(
+                          "USERIDGDLY",
+                          res_login.data.data.userid,
+                          1 * 60 * 60
+                        );
+                        this.$cookies.set("gdmobileuserphone", this.phonenum, 1 * 60 * 60);
+                        this.$cookies.set(
+                          "usersecret",
+                          res_login.data.data.usersecret,
+                          1 * 60 * 60
+                        );
+                        this.$cookies.set("userid", res_login.data.data.tuijian, 1 * 60 * 60); //推荐人 0 or 123123
+                        
+                        // 
+                        http.fetchGet("http://m.czgdly.com/transportation/getuserid.asp",{}).then( (data) => {
+                          const res_getoaid = data;
+                          if (res_getoaid.data.error == 0) {
+                          if (res_getoaid.data.data.user_id != "0") {
+                            this.$cookies.set(
+                                "userid",
+                                res_getoaid.data.data.user_id,
+                                1 * 60 * 60
+                              ); //odid 0 or 123123
+                            }
+                          }
+                          console.log(typeof this.$cookies.get("userid"));
+                          if (this.$cookies.get("userid") === "0") {
+                            this.$cookies.set("userid", this.currentuid, 1 * 60 * 60); //uid 0 or 32532534
+                          }
+                          setTimeout(() => {
+                            //这里要跳转
+                            // console.log("要跳转的url", this.fullPath);
+                            this.$router.push(this.fullPath);
+                          }, 500);
+                          }).catch( err => {
+                            this.isloading = false;
+                            this.loginstr = "验证码不正确";
+
+                            setTimeout(() => {
+                              this.canlogin = false;
+
+                              this.loginstr = "登陆";
+                            }, 2000);
+                        })
+                        
+                    } else {
+                      this.isloading = false;
+                      this.loginstr = "验证码不正确";
+
+                      setTimeout(() => {
+                        this.canlogin = false;
+
+                        this.loginstr = "登陆";
+                      }, 2000);
+                    }
         }).catch( err=> {
-            console.log("发生错误",err);
+          this.isloading = false;
+          this.loginstr = "验证码不正确";
+
+          setTimeout(() => {
+            this.canlogin = false;
+
+            this.loginstr = "登陆";
+          }, 2000);
+        })
+        
+      } catch (error) {
+          this.loginbuttonenabel = false;
+          this.loginbuttonstatus = "登陆";
+      }
+    },
+    sendSms(){
+      let sec = 59;
+      this.canuse = true;
+      if (this.phonenum ==="" || !this.$checkphone(this.phonenum)) {
+        this.phoneerrorMessage = "手机号码格式不正确";
+        this.canlogin = true
+        return ;
+      }else {
+        this.phoneerrorMessage = "";
+        this.canlogin = false;
+      }
+      https.fetchGet(land_url,{} ).then((data) => {
+        // console.log(data);
+        if ( data.status == ERR_OK ) {
+          console.log("发送验证码返回的信息", data);
+        }else {
+          console.log("发送验证码出错",data.status)
+        }
+      }).catch(err=>{
+              console.log("发送验证码出错",err);
           }
       );
       this.buttonstr = "60秒后重新发送";
@@ -83,108 +202,9 @@ export default {
           clearInterval(smsloop);
         }
       }, 1000);
-
     },
-    async landId(){  // 登录操作
-      if ( this.phoneNumber === "" ) {
-        this.loginstr="请输入手机号";
-        return ;
-      }
-      if ( this.codeNumber === "") {
-        this.loginstr="请输入验证码";
-        return ;
-      }
-      this.isloading = true;
-      this.loginstr = "登陆中。。";
-      this.canlogin = true;
-      try {
-        const res_login = await this.$axios.get(
-          "http://m.czgdly.com/transportation/login/sendcode.asp",
-          {
-            params: {
-              c: "2",
-              tel: this.phoneNumber,
-              name: this.phoneNumber,
-              val: this.sms,
-              wherefrom: this.$cookie.get("WHERE"),
-              tuijian: window.localStorage.getItem("agency")
-            }
-          }
-        );
-        if (res_login.data.message == "success") {
-          this.loginstr = "登陆成功";
-          this.isloading = false;
-          this.$cookie.set("gdmobileusername", this.phoneNumber, 1 * 60 * 60);
-          this.$cookie.set(
-            "USERIDGDLY",
-            res_login.data.data.userid,
-            1 * 60 * 60
-          );
-          this.$cookie.set("gdmobileuserphone", this.phoneNumber, 1 * 60 * 60);
-          this.$cookie.set(
-            "usersecret",
-            res_login.data.data.usersecret,
-            1 * 60 * 60
-          );
-          this.$cookie.set("userid", res_login.data.data.tuijian, 1 * 60 * 60); //推荐人 0 or 123123
-          const res_getoaid = await this.$axios.get(
-            "http://m.czgdly.com/transportation/getuserid.asp",
-            {
-              params: {
-                mobile: this.phoneNumber
-              }
-            }
-          );
-          if (res_getoaid.data.error == 0) {
-            if (res_getoaid.data.data.user_id != "0") {
-              this.$cookie.set(
-                "userid",
-                res_getoaid.data.data.user_id,
-                1 * 60 * 60
-              ); //odid 0 or 123123
-            }
-          }
-          console.log(typeof this.$cookie.get("userid"));
-          if (this.$cookie.get("userid") === "0") {
-            this.$cookie.set("userid", this.currentuid, 1 * 60 * 60); //uid 0 or 32532534
-          }
-          setTimeout(() => {
-            //这里要跳转
-            // console.log("要跳转的url", this.fullPath);
-            this.$router.push(this.fullPath);
-          }, 500);
-        } else {
-          this.isloading = false;
-          this.loginstr = "验证码不正确";
-
-          setTimeout(() => {
-            this.canlogin = false;
-
-            this.loginstr = "登陆";
-          }, 2000);
-        }
-      } catch (error) {
-        this.loginbuttonenabel = false;
-        this.loginbuttonstatus = "登陆";
-      }
-    },
-    // 检验手机号和验证码的输入
-    phoneBlur(){
-      // console.log(11);
-      if (this.phoneNumber === "") {
-        this.phoneNumberTest = "请填写手机号";
-      }else if(!(/^1[3456789]\d{9}$/.test(this.phoneNumber))){ 
-        // 错误
-        this.phoneNumberNo = true;        
-        
-      }else {
-        // 对
-
-        this.phoneNumberNo = false; 
-      }
-    },
-    codeBlur(){
-
+    onClickLeft(){
+      this.$router.go(-1);
     },
   },
   watch:{
@@ -193,49 +213,23 @@ export default {
     }
   },
   components:{
-    Button
+    "van-cell-group": CellGroup,
+    "van-field": Field,
+    "van-button": Button,
+    "van-nav-bar": NavBar,
+    "van-col": Col,
+    "van-row": Row
   },
 }
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped> 
-  .land
-    width:100%
-    .content
-      position:relative
-      top:60px
-      .phone
+  .land 
+    box-sizing: border-box
+    padding-top: 100px
+    .login-button 
+      margin-top: 20px
+      padding: 0 20px
+      .buttong 
         width:100%
-        border-bottom:none!important
-        .mint-cell mint-field
-          border-bottom:none!important
-      .testtext
-        // background:#fff
-        text-indent:105px
-        line-height:16px 
-        color: #f44
-        font-size: 12px
-        text-align:left
-      .code 
-        display:flex
-        width:100% 
-        .left
-          display:inline-block
-          flex:1
-        .right 
-          display:inline-block
-          width:105px 
-          font-size:14px 
-          .mint-button
-            height:80% 
-            width:100% 
-            margin-top:5%
-            font-size:12px 
-      .deng
-        position:relative
-        top:30px 
-        width:90% 
-        margin:0 auto
-        .mint-button
-          background:#f85
-          color:#fff
+        border-radius: 5px
 </style>

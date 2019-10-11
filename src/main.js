@@ -24,6 +24,8 @@ import VueCookies from 'vue-cookies'
 import Calendar from 'vue-mobile-calendar'
 // 使用vue-moment
 import vueMoment from "vue-moment"
+// 调用自己写的js文件
+import checkpone from "./utils/checkphone.js"
 
 Vue.use(vueMoment);
 
@@ -46,7 +48,7 @@ Vue.prototype.$axios = axios;
 Vue.prototype.qs = QS;
 Vue.config.productionTip = false
 Vue.prototype.$utils = utils; //注册全局方法
-
+Vue.use(checkpone);
 
 /* eslint-disable no-new */
 new Vue({

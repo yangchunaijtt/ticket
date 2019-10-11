@@ -249,7 +249,7 @@ export default {
         if ( data.status == ERR_OK ) {
           this.detailsGetData = data.data.data;
           // 赋值图片
-          console.log()
+          
           if (this.detailsGetData.images.image.length >=9) {
             this.banner = this.detailsGetData.images.image.slice(0,9);
           }else {

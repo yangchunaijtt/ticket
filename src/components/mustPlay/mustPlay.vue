@@ -2,8 +2,8 @@
   <div class="play">
     <div class="header">
       <span class="text">人气必玩</span>
-      <router-link :to="{path:'/tour',query:{search:'常州'}}" class="link">
-        常州全部景点
+      <router-link :to="{path:'/tour',query:{search:iscityname}}" class="link">
+        {{iscityname}}全部景点
         <i class="icon iconfont iconyou3"></i>
       </router-link>
     </div>
@@ -34,7 +34,11 @@ export default {
       default:{
         
       }
-    }
+    },
+    iscityname:{
+      type:String,
+      default:"常州"
+    },
   },
   data(){
     return {
@@ -109,6 +113,7 @@ export default {
             .img
               width:100% 
               min-height:90.6px
+              max-height:90.66px
             .today  
               position: absolute;
               top: 0

@@ -1,11 +1,11 @@
 <template>
   <div class="index">
     <v-header :iscityname="iscityname"></v-header>
-    <screen></screen>
-    <must-play :goodList="goodList"></must-play>
-    <popular :goodList="goodList"></popular>
+    <screen   :iscityname="iscityname"></screen>
+    <must-play :goodList="goodList"  :iscityname="iscityname"></must-play>
+    <popular :goodList="goodList"   :iscityname="iscityname"></popular>
     <!-- 城市选择组件 -->
-    <choiceCity v-show="showCity"></choiceCity>
+    <choiceCity v-show="showCity" ></choiceCity>
   </div>
 </template>
 

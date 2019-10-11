@@ -14,7 +14,7 @@
           <div class="head-txt">
             <span class="search iconfont iconsousuo">
             </span>
-            <input type="text" placeholder="常州恐龙园" class="spotname" @focus="toSearchv">
+            <input type="text" placeholder="景点名称" class="spotname" @focus="toSearchv">
           </div>
         </div>
         <div class="people">

@@ -59,9 +59,14 @@
     </div>
     <div class="bottom">
       <div class="price">
-        应付：
-        <span class="nowprice">{{returnNowPrice}}</span>
-        <span class="oldprice">{{returnOldPrice}}</span>
+        <div class="olprice"> 
+          <span class="title">原价:</span>
+          <span class="price">{{returnOldPrice}}</span>
+        </div>
+        <div class="nowprice">
+          <span class="title">折扣价:</span>
+          <span class="price">{{returnNowPrice}}</span>
+        </div>
       </div>
       <div class="submit" @click="CreatedOrder">
         提交订单
@@ -381,17 +386,36 @@ export default {
       z-index:100
       .price
         flex:1 
-        text-indent:20px 
         font-size:15px 
         overflow:hidden
-        .nowprice 
-          font-size:17px 
-          color:#FE686C
-        .oldprice
-          text-indent:16px 
-          text-align:right
-          text-decoration:line-through
-          font-size:14px
+        text-indent:2px
+        .olprice
+          float:left 
+          width:50%
+          display:inline-block 
+          font-size:14px 
+          .title 
+            flaot:left
+            text-decoration:none
+          .price 
+            flaot:left
+            text-decoration:line-through
+        .nowprice
+          display:flex
+          float:left 
+          width:50%
+          // display:inline-block 
+          font-size:16px 
+          text-align:left
+          .title 
+            max-width:58px 
+            // flaot:left
+            color:#666
+          .price 
+            flex:1
+            // flaot:left
+            color:#FE686C
+            overflow:hidden
       .submit
         width:150px 
         background: -webkit-linear-gradient(-40deg,#FE686C 0,#FE3C71 60%)
