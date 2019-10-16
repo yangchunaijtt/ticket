@@ -318,15 +318,10 @@ export default {
     resserve(data){
       // let orderData = 
       // console.log(this.detailsGetData,"预定",data);
-      console.log("门票的信息", this.detailsGetData.productId);
-      console.log("门票的信息", this.detailsGetData.goodsId);
+      // console.log("门票的信息", this.detailsGetData.productId);
+      // console.log("门票的信息", this.detailsGetData.goodsId);
 
-      // 先要判断下登录还是未登录
-      // if () {
-
-      // }else {
-
-      // }
+      // console.log("详情页",data);
       this.$router.push({
         name: "order",
         query: {

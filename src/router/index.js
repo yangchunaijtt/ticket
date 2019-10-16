@@ -3,15 +3,15 @@ import Router from 'vue-router'
 
 // 下面是引入的模板
 import index from "@/components/index/index"
-import land  from "@/components/land/land"
+import land  from "@/components/land/login"
 import details  from "@/components/details/details"
 import tour  from "@/components/tour/tour"
 import toknow from "@/components/toknow/toknow"
 import searchv from "@/components/searchv/searchv"
 import order from "@/components/order/order"
-import time from "@/components/time/time"
 import orderlist from "@/components/orderlist/orderlist"
-
+import orderdetails from "@/components/orderdetails/orderdetails"
+import ordertime from "@/components/ordertime/ordertime"
 
 Vue.use(Router)
 
@@ -58,14 +58,19 @@ export default new Router({
       component:order
     },
     {
-      path:"/time",
-      name:"time",
-      component:time
-    },
-    {
       path:"/orderlist",
       name:"orderlist",
       component:orderlist
     },
+    {
+      path:"/orderdetails",
+      name:"orderdetails",
+      component:orderdetails
+    },
+    {
+      path:"/ordertime",
+      name:"ordertime",
+      component:ordertime
+    }
   ]
 })

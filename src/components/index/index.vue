@@ -40,7 +40,6 @@ export default {
     }
   },
   created(){
-    // console.log(index_url_data);
     
     // 读取存储的城市名
     
@@ -63,10 +62,13 @@ export default {
     },
     // 发送取数据
     ajaxData(cityname){
+      
+    
       index_url_data.placeCity = cityname;
       this.iscityname = cityname;
       this.$cookies.set("cityname",this.iscityname);
       console.log(cityname);
+      console.log("index_url_data",index_url_data);
       https.fetchPost(index_url,index_url_data ).then((data) => {
           // console.log("取到数据",data,data.status);
             if ( data.status == ERR_OK ) {

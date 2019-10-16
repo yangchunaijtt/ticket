@@ -23,11 +23,11 @@ import VueCookies from 'vue-cookies'
 // 使用vue-mobile-calendar时间
 import Calendar from 'vue-mobile-calendar'
 // 使用vue-moment
-import vueMoment from "vue-moment"
+
 // 调用自己写的js文件
 import checkpone from "./utils/checkphone.js"
 
-Vue.use(vueMoment);
+
 
 Vue.use(VueCookies)
 Vue.use(VueAwesomeSwiper, /* { default global options } */)

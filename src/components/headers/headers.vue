@@ -36,7 +36,7 @@ export default {
   data(){
     return{
       LoadData:{
-        isLoad:true
+        isLoad:false
       },
       isScroll:false
     }
