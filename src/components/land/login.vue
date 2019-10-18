@@ -42,6 +42,8 @@
 </template>
 
 <script>
+import https from "../../https.js"
+
 import { Row, Col, Field, NavBar, Cell, CellGroup, Button } from "vant";
 export default {
   name: "login",
@@ -85,6 +87,14 @@ export default {
       this.loginstr = "登陆中。。";
       this.canlogin = true;
       try {
+        console.log("同步ajax1",{
+              c: "2",
+              tel: this.phonenum,
+              name: this.phonenum,
+              val: this.sms,
+              wherefrom: this.$cookies.get("WHERE"),
+              tuijian: window.localStorage.getItem("agency")
+            });
         const res_login = await this.$axios.get(
           "http://m.czgdly.com/transportation/login/sendcode.asp",
           {
@@ -93,7 +103,8 @@ export default {
               tel: this.phonenum,
               name: this.phonenum,
               val: this.sms,
-              wherefrom: this.$cookie.get("WHERE"),
+              //this.$cookiess
+              wherefrom: this.$cookies.get("WHERE"),
               tuijian: window.localStorage.getItem("agency")
             }
           }
@@ -101,20 +112,20 @@ export default {
         if (res_login.data.message == "success") {
           this.loginstr = "登陆成功";
           this.isloading = false;
-          this.$cookie.set("gdmobileusername", this.phonenum, 1 * 60 * 60);
-          this.$cookie.set(
+          this.$cookies.set("gdmobileusername", this.phonenum, 1 * 60 * 60);
+          this.$cookies.set(
             "USERIDGDLY",
             res_login.data.data.userid,
             1 * 60 * 60
           );
-          this.$cookie.set("gdmobileuserphone", this.phonenum, 1 * 60 * 60);
-          this.$cookie.set(
+          this.$cookies.set("gdmobileuserphone", this.phonenum, 1 * 60 * 60);
+          this.$cookies.set(
             "usersecret",
             res_login.data.data.usersecret,
             1 * 60 * 60
           );
-          this.$cookie.set("userid", res_login.data.data.tuijian, 1 * 60 * 60); //推荐人 0 or 123123
-          const res_getoaid = await this.$axios.get(
+          this.$cookies.set("userid", res_login.data.data.tuijian, 1 * 60 * 60); //推荐人 0 or 123123
+          const res_getoaid = await http.fetchGet(
             "http://m.czgdly.com/transportation/getuserid.asp",
             {
               params: {
@@ -124,16 +135,16 @@ export default {
           );
           if (res_getoaid.data.error == 0) {
             if (res_getoaid.data.data.user_id != "0") {
-              this.$cookie.set(
+              this.$cookies.set(
                 "userid",
                 res_getoaid.data.data.user_id,
                 1 * 60 * 60
               ); //odid 0 or 123123
             }
           }
-          console.log(typeof this.$cookie.get("userid"));
-          if (this.$cookie.get("userid") === "0") {
-            this.$cookie.set("userid", this.currentuid, 1 * 60 * 60); //uid 0 or 32532534
+          console.log(typeof this.$cookies.get("userid"));
+          if (this.$cookies.get("userid") === "0") {
+            this.$cookies.set("userid", this.currentuid, 1 * 60 * 60); //uid 0 or 32532534
           }
           setTimeout(() => {
             //这里要跳转
@@ -160,8 +171,7 @@ export default {
     sendSms() {
       let sec = 59;
       this.canuse = true;
-      this.$axios
-        .get("http://m.czgdly.com/transportation/login/sendcode.asp", {
+      https.fetchGet("http://m.czgdly.com/transportation/login/sendcode.asp", {
           params: { tel: this.phonenum, c: "1" }
         })
         .then(res => {

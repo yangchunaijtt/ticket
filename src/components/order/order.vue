@@ -106,7 +106,7 @@
         </div>
         <div class="nowprice">
           <span class="title">折扣价:</span>
-          <span class="price">{{returnNowPrice}}</span>
+          <span class="price">{{discountPrice}}</span>
         </div>
       </div>
       <div class="submit" @click="CreatedOrder">
@@ -211,6 +211,7 @@ export default {
         }
       },
       salePrice: null, //提交给对象
+      goodinfo: null,
       // 其他
 
     }
@@ -358,10 +359,6 @@ export default {
     // console.log(this.eleHeight);
   },
   methods:{
-    // 高度
-    // orderHeight(){
-    //   return 
-    // },
     // 返回时间
     orderDataTime(number){
       // 
@@ -443,7 +440,8 @@ export default {
         `${d.start.year}/${d.start.month}/${d.start.date}`
       ); //当前选择的日期；
       console.log("是否今天", traveldate.isSame(moment(), "day"));
-      console.log("嗨，上石化",moment(`${d.start.date}`));
+      
+
       if (traveldate.isSame(moment(), "day")) {
         this.currentChooseIndex = 0;
         this.currentshowChoose = {
@@ -648,6 +646,19 @@ export default {
       return `?token=${this.$cookies.get("USERIDGDLY")}|${this.$cookies.get(
         "usersecret"
       )}|${this.$cookies.get("gdmobileuserphone")}|${this.$cookies.get("WHERE")}`;
+    },
+    // 折扣价
+    discountPrice() {
+      //折扣价
+      // if (!this.goodinfo) {
+      //   return 0;
+      // }
+      // const officaldispirice = this.goodinfo.activityInfo.number || 0;
+      // let tmpPrice =
+      //   ((this.salePrice.payprice - officaldispirice) * 100 * 0.997).toRound(
+      //     0
+      //   ) * this.ticketnum;
+      // return tmpPrice;
     },
     // 
   },

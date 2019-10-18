@@ -1,6 +1,7 @@
 <template>
   <div class="index">
-    <v-header :iscityname="iscityname"></v-header>
+    <div id="container" height="0" width="0"></div>
+    <v-header :iscityname="iscityname" :isLogin="isLogin" :uid="uid"></v-header>
     <screen   :iscityname="iscityname"></screen>
     <must-play :goodList="goodList"  :iscityname="iscityname"></must-play>
     <popular :goodList="goodList"   :iscityname="iscityname"></popular>
@@ -16,6 +17,8 @@ import screen from "@/components/screen/screen.vue"
 import popular from "@/components/popular/popular.vue"
 import choiceCity from "@/components/choiceCity/choiceCity.vue"
 
+
+// import { isLogin, getToken } from "../../utils/login.js";
 // 请求部分配置和引入
 import https from "../../https.js"
 
@@ -39,6 +42,45 @@ export default {
       iscityname:"",
     }
   },
+  computed:{
+    isLogin(){
+      const userid=this.$cookies.get("USERIDGDLY");
+      const WHERE=this.$cookies.get("WHERE");
+      const gdmobileusername=this.$cookies.get("gdmobileusername");
+      const gdmobileuserphone=this.$cookies.get("gdmobileuserphone");
+      const usersecret=this.$cookies.get("usersecret");
+      if(userid==null||userid==""){
+        console.log("userid")
+        return false;
+      }
+      if(gdmobileusername==null||gdmobileusername==""){
+        console.log("gdmobileusername")
+
+        return false;
+      }
+      if(gdmobileuserphone==null||gdmobileuserphone==""){
+        return false;
+      }
+      if(usersecret==null||usersecret==""){
+        return false;
+      }
+      return true; 
+    },
+     getToken(){
+       return `?token=${this.$cookies.get("USERIDGDLY")}|${this.$cookies.get(
+        "usersecret"
+      )}|${this.$cookies.get("gdmobileuserphone")}|${this.$cookies.get("WHERE")}`
+    },
+    uid(){
+      const userid=this.$cookies.get("userid");
+      if(userid==null||userid==""){
+        console.log("userid")
+        return "";
+      }else {
+        return userid;
+      }
+    },
+  },
   created(){
     
     // 读取存储的城市名
@@ -52,11 +94,15 @@ export default {
     // console.log(this.iscityname);
     this.ajaxData(this.iscityname);
 
+    // 初始化定位效果
+    // 地图的初始化
+    this.chartBus_amap();
   },
   mounted(){
     
   },
   methods:{
+    // 其他
     showCityClick(){
       this.showCity = !this.showCity;
     },
@@ -81,7 +127,11 @@ export default {
                 console.log("发生错误",err)
             }
       );
-    }
+    },
+    // 定位效果，定位功能
+    chartBus_amap(){
+      
+    },
   },
   components:{
     'v-header':header,

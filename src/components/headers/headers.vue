@@ -18,8 +18,9 @@
           </div>
         </div>
         <div class="people">
-          <router-link to="/land" v-show="!LoadData.isLoad" class="toload">登陆</router-link>
-          <router-link to="/orderlist" class="load icon iconfont iconren" v-show="LoadData.isLoad"></router-link>
+          <router-link to="/land" v-show="!isLogin" class="toload">登陆</router-link>
+          <router-link :to="{path:'/orderlist',query:{uid:uid}}" class="toload " v-show="isLogin">我的</router-link>
+          <!--  :to="{path:'/orderlist',query:{uid:uid}}" -->
         </div>
       </div>
     </div>
@@ -31,7 +32,16 @@ export default {
     iscityname:{
       type:String,
       default:"常州"
-    }
+    },
+    // 登录
+    isLogin:{
+      type:Boolean,
+      default:false
+    },
+    uid:{
+      type:String,
+      default:"",
+    },
   },
   data(){
     return{

@@ -83,6 +83,13 @@
       "unicode_decimal": 59057
     },
     {
+      "icon_id": "1066778",
+      "name": "门票",
+      "font_class": "ticket",
+      "unicode": "e622",
+      "unicode_decimal": 58914
+    },
+    {
       "icon_id": "1089299",
       "name": "提示",
       "font_class": "buoumaotubiao19",
@@ -186,6 +193,13 @@
       "font_class": "cuowu",
       "unicode": "e623",
       "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "2121722",
+      "name": "门票",
+      "font_class": "menpiao",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
     },
     {
       "icon_id": "3050508",

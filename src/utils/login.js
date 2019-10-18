@@ -1,9 +1,10 @@
-const  Cookie  = this.$cookies;
-const userid=Cookie.get("USERIDGDLY");
-const WHERE=Cookie.get("WHERE");
-const gdmobileusername=Cookie.get("gdmobileusername");
-const gdmobileuserphone=Cookie.get("gdmobileuserphone");
-const usersecret=Cookie.get("usersecret");
+// const  cookie = this.$cookies;
+console.log("login",this.cookies);
+const userid=this.$cookies.get("USERIDGDLY");
+const WHERE=this.$cookies.get("WHERE");
+const gdmobileusername=this.$cookies.get("gdmobileusername");
+const gdmobileuserphone=this.$cookies.get("gdmobileuserphone");
+const usersecret=this.$cookies.get("usersecret");
 
 
 
@@ -26,9 +27,9 @@ export const isLogin= ()=>{
   return true;  
 }
 export const getToken=()=>{
-  return `?token=${Cookie.get("USERIDGDLY")}|${Cookie.get(
+  return `?token=${this.$cookies.get("USERIDGDLY")}|${this.$cookies.get(
     "usersecret"
-  )}|${Cookie.get("gdmobileuserphone")}|${Cookie.get("WHERE")}`
+  )}|${this.$cookies.get("gdmobileuserphone")}|${this.$cookies.get("WHERE")}`
 }
 
 

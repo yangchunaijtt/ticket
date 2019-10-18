@@ -1,73 +1,83 @@
 <template>
-  <div class="orderlist">
-    <mt-header title="我的订单">
-      <router-link to="/index" slot="left">
-        <mt-button icon="back"></mt-button>
-      </router-link>
-    </mt-header>
-    <div class="content">
-      <div class="item">
-        
-      </div>
+  <div class="list">
+    <van-nav-bar title="订单列表" left-arrow @click-left="onClickLeft" />
+    <div class="dd-list">
+      <van-list v-model="loading" :finished="finished" @load="onLoad">
+        <orderitem v-for="(item, index) in orderlist" :order="item" :key="index"></orderitem>
+      </van-list>
     </div>
   </div>
 </template>
+
 <script>
-
-import { Header,Field ,Button } from 'mint-ui';
-// 请求部分配置和引入
-import https from "../../https.js"
-
-const ERR_OK = 200;
-const index_url =  "http://58.216.175.118:86/api/LvmamaScenicTickets/ProductLocalInfos/GetProductInfosList";
-let index_url_data ={
-  placeCity: '常州',
-  hasPrice: true,
-  pageIndex: 1,
-  productStatus: 1,
-  pageSize: 10
-};
-
-
+import https from "../../https.js";
+import { NavBar, List } from "vant";
+import orderitem from "../orderitem/orderitem";
 export default {
-  data(){
+  name: "ticketorderList",
+  components: {
+    "van-nav-bar": NavBar,
+    orderitem: orderitem,
+    vanList: List
+  },
+  data() {
     return {
-      orderListData:{}, // 存储我的订单的信息
+      orderlist: [],
+      totalpage: 1,
+      currentPage: 0,
+      loading: false,
+      finished: false
+    };
+  },
+  methods: {
+    onClickLeft() {
+      this.$router.go(-1);
+    },
+    getListbypage(page = 1) {
+      const tokenparams = () => {
+        return `?token=${this.$cookies.get("USERIDGDLY")}|${this.$cookies.get(
+          "usersecret"
+        )}|${this.$cookies.get("gdmobileuserphone")}|${this.$cookies.get("WHERE")}`;
+      };
+      return https.fetchPost(
+       
+        `api/LvmamaScenicTickets/ScenicLocalOrders/GetScenicOrdersByMember/${this.$cookies.get(
+          "USERIDGDLY"
+        )}-${this.$cookies.get("WHERE")}${tokenparams()}`,
+
+        {
+          pageSize: 6,
+          pageIndex: this.currentPage,
+          sort:"desc"
+        }
+      );
+    },
+    async onLoad() {
+      this.currentPage++;
+      
+      const list = await this.getListbypage(this.currentPage);
+      console.log("loading", list);
+      this.totalpage =
+        list.data.data.count % 6 != 0
+          ? Math.floor(list.data.data.count / 6) + 1
+          : Math.floor(list.data.data.count / 6);
+      this.orderlist.push(...list.data.data.scenicOrders);
+      this.loading = false;
+
+      if (this.currentPage+1 > this.totalpage) {
+        this.finished = true;
+      }
     }
   },
-  methods:{
-
-  },
-  created(){
-
-  },
-}
+  beforeRouteEnter: (to, from, next) => {
+    next();
+  }
+};
 </script>
-<style  lang="stylus"  rel="stylesheet/stylus" scoped>
-  .orderlist
-    width:100%
-    .header
-      box-sizing:border-box
-      display:flex 
-      position:fixed
-      top:0 
-      left:0 
-      width:100%
-      height:46px 
-      line-height:46px 
-      background:#fff 
-      .returnleft
-        width:46px 
-        text-align:center
-        font-size:24px 
-        font-weight:550 
-        color:#333
-      .name 
-        flex:1
-        text-align:center
-        text-indent:-46px
-        font-size:20px 
-        font-weight:530 
-        color:#333
-</style>
 
+<style  lang="stylus"  rel="stylesheet/stylus" scoped>
+.dd-list 
+  color: #2c3e50
+  margin-top: 10px;
+
+</style>
