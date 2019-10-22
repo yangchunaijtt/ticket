@@ -52,6 +52,7 @@ export default {
         }
       );
     },
+    
     async onLoad() {
       this.currentPage++;
       

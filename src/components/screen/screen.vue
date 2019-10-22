@@ -17,12 +17,12 @@ export default {
     return {
       screenData:[
         {
-          name:"境外门票",
-          img:"https://pics.lvjs.com.cn/pics/super/2019/04/1555069170_96925.jpg"
-        },
-        {
           name:"主题公园",
           img:"https://pics.lvjs.com.cn/pics/super/2017/05/1494486580_29997.png"
+        },
+         {
+          name:"团队拓展",
+          img:"https://pics.lvjs.com.cn/pics/super/2019/04/1555069170_96925.jpg"
         },
         {
           name:"动植物园",

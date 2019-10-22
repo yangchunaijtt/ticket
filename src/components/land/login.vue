@@ -25,16 +25,13 @@
       </van-field>
     </van-cell-group>
     <div class="login-button">
-      <!-- <van-row>
-        <van-col span="12"> -->
+     
       <van-button size="normal"
                   bottom-action
                   class="buttong"
                   :loading="isloading"
                   @click="clicktologin"
                   :disabled="canlogin"> {{loginstr}}</van-button>
-      <!-- </van-col>
-      </van-row> -->
 
     </div>
 
@@ -212,5 +209,6 @@ export default {
       margin-top: 20px
       padding: 0 20px
       .buttong 
+        width:100%
         border-radius: 5px
 </style>

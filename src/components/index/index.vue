@@ -16,7 +16,7 @@ import mustPlay from "@/components/mustPlay/mustPlay.vue"
 import screen from "@/components/screen/screen.vue"
 import popular from "@/components/popular/popular.vue"
 import choiceCity from "@/components/choiceCity/choiceCity.vue"
-
+import { Toast } from "vant";
 
 // import { isLogin, getToken } from "../../utils/login.js";
 // 请求部分配置和引入
@@ -81,6 +81,13 @@ export default {
       }
     },
   },
+  // 
+  beforeRouteEnter(to,from,next){
+    Toast.loading({ duration: 0, forbidClick: true, message: "加载中...." });
+    next(vm => {
+      
+    });
+  },
   created(){
     
     // 读取存储的城市名
@@ -97,6 +104,7 @@ export default {
     // 初始化定位效果
     // 地图的初始化
     this.chartBus_amap();
+    
   },
   mounted(){
     
@@ -109,7 +117,7 @@ export default {
     // 发送取数据
     ajaxData(cityname){
       
-    
+      Toast.loading({ duration: 0, forbidClick: true, message: "获取门票中." });
       index_url_data.placeCity = cityname;
       this.iscityname = cityname;
       this.$cookies.set("cityname",this.iscityname);
@@ -123,8 +131,10 @@ export default {
             }else{
               console.log("发送错误",data.status);
             }
+            Toast.clear();
         }).catch( err=> {
                 console.log("发生错误",err)
+                Toast.clear();
             }
       );
     },

@@ -27,9 +27,12 @@
       </div>
     </div>
   </div>
+  
 </template>
 
 <script>
+import {Toast} from "vant"
+
 export default {
   name: "orderitem",
   components: {},
@@ -63,6 +66,12 @@ export default {
       }
     }
   },
+  beforeRouteEnter(to,from,next){
+    Toast.loading({ duration: 0, forbidClick: true, message: "加载中." });
+    next(vm=>{
+
+    })
+  },
   methods: {
     gotodetails() {
       this.$router.push({
@@ -72,7 +81,10 @@ export default {
         }
       });
     }
-  }
+  },
+  mounted(){
+    Toast.clear();
+  },
 };
 </script>
 

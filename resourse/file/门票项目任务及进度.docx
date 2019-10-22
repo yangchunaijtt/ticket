@@ -59,6 +59,16 @@ https://blog.csdn.net/mm_hello11/article/details/89048147
 2:实现左右轮动，好的文档
 https://www.cnblogs.com/zhoulifeng/p/9646296.html
 
+九：lodash
+1：官网api地址：
+https://www.lodashjs.com/
+2：作用
+Lodash 通过降低 array、number、objects、string 等等的使用难度从而让 JavaScript 变得更简单。
+Lodash 的模块化方法 非常适用于：
+遍历 array、object 和 string
+对值进行操作和检测
+创建符合功能的函数
+
 
 代码注意部分
 1：v-for需要绑定下keys，来提高效率 

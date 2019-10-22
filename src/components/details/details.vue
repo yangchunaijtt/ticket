@@ -166,7 +166,8 @@
 
 // 引入vue的轮播图插件：vue-awesome-swiper
 import { swiper, swiperSlide } from "vue-awesome-swiper";
-require("swiper/dist/css/swiper.css");
+import {Toast} from "vant"
+
 
 import booking from "../booking/booking"
 // 请求部分配置和引入
@@ -241,6 +242,8 @@ export default {
     };
   },
   created(){
+    Toast.loading({ duration: 0, forbidClick: true, message: "加载中." });
+
     this.searchId = this.$utils.getUrlKey("id");
     // console.log(this.searchId);
     // details的请求
@@ -262,9 +265,10 @@ export default {
         }else {
           console.log("details页ajax出现问题",data.status)
         }
-       
+       Toast.clear();
     }).catch(err=>{
             console.log("details页ajax出现问题",err)
+            Toast.clear();
         }
     );
     // 默认的预订须知提示
@@ -340,6 +344,8 @@ export default {
 }
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped> 
+ @import 'swiper/dist/css/swiper.min.css';
+
   .details
     width:100% 
     position:relative

@@ -1,5 +1,6 @@
 <template>
   <div class="tour">
+    <div class="blockpage" @click="closeblock" v-show="blockShow"></div>
     <div class="header">
       <div class="search">
         <router-link to="/index" class="icon iconfont iconzuo1"></router-link>
@@ -11,23 +12,27 @@
       <div class="label">
         <ul class="labelul">
           <div class="slide">
-            <li class="item"    v-for="(item, index) in label" :keys="index"  @click="sortTitle(item)">
-              {{item}}
+            <li class="item"    v-for="(item, index) in label_c" :keys="index"  @click="sortTitle(item.title)" :class="currentfilter==item.title?'isclose':'noclose'">
+              {{item.title}}
             </li> 
           </div>        
         </ul>
         <div class="drop"  @click="showAll">
           <i class="icon iconfont" :class="isShowAll?'iconshangla':'iconxiala-'"></i>
         </div>
-        <div class="all" v-show="isShowAll">
-          <ul class="allof">
-            <li class="item"   v-for="(item, index) in label"   :keys="index">
-              <div class="itemdiv" @click="sortTitle(item)">
-                {{item}}
-              </div>
-            </li>
-          </ul>
-        </div>
+        <transition name="labelAll">
+          <div class="all" v-show="isShowAll">
+            
+              <ul class="allof">
+                <li class="item"   v-for="(item, index) in label"   :keys="index" >
+                  <div class="itemdiv" @click="sortTitle(item.title)" :class="currentfilter==item.title?'divclose':'divno'">
+                    {{item.title}}
+                  </div>
+                </li>
+              </ul>
+           
+          </div>
+        </transition>
       </div>
       <div class="select">
           <div class="all" :class="isSort==='all'?'isall':'noall'" @click="isall">
@@ -43,7 +48,7 @@
     </div>
     <div class="content">
       <ul class="ul">
-        <li class="item"    v-for="(item, index) in tourSearchData.productInfos?tourSearchData.productInfos:[]" >
+        <li class="item"    v-for="(item, index) in productList_c?productList_c:[]" >
           <router-link :to="{path:'/details',query:{id:item.id}}" class="itemA">
             <div class="center">
               <img v-lazy="item.images[0]" width="100" class="img">
@@ -65,6 +70,8 @@
 
 // 请求部分配置和引入
 import https from "../../https.js"
+import _findeindex from 'lodash/findIndex'
+import {Toast} from "vant"
 
 // 参数
 const ERR_OK = 200;
@@ -82,18 +89,62 @@ export default {
   data(){
     return {
       tourSearchData:{},
+      blockShow:false,
+      currentfilter: "不限",
+      currenttheme: 0,
       label:[
-        "不限",
-        "主题公园",
-        "动植物园",
-        "温泉",
-        "团队拓展",
-        "漂流戏水",
-        "田园度假",
-        "园林景观",
-        "民俗风情",
-        "湖光山色",
-        "人文艺术",
+        {
+          title:'不限',
+          choose:true
+        },{
+          title:'主题乐园',
+          choose:false
+        },{
+          title:'湖光山色',
+          choose:false
+        },{
+          title:'温泉',
+          choose:false
+        },
+        {
+          title:'宗教祈福',
+          choose:false
+        },{
+          title:'民俗风情',
+          choose:false
+        },{
+          title:'动植物园',
+          choose:false
+        },
+        {
+          title:'田园度假',
+          choose:false
+        },
+
+        { 
+          title:'都市观光',
+          choose:false
+        },
+        { 
+          title:'古迹遗址',
+          choose:false
+        },
+        { 
+        title:'园林景观',
+        choose:false
+        },
+        { 
+        title:'团队拓展',
+        choose:false
+        },
+        { 
+        title:'滑雪',
+        choose:false
+        },
+        { 
+        title:'人文艺术',
+        choose:false
+        },
       ],
       isShowAll:false,  // 是否显示所有筛选
       isSort:"all",   // 排序的方式：all xia shang
@@ -101,6 +152,7 @@ export default {
     }
   },
   created(){
+    Toast.loading({ duration: 0, forbidClick: true, message: "加载中.请稍候" });
     this.searchName = this.$utils.getUrlKey("search");
     tour_data.keyName = this.searchName;
     https.fetchPost(tour_url,tour_data ).then((data) => {
@@ -111,17 +163,27 @@ export default {
           }else{
             console.log("发送错误",data.status);
           }
+          Toast.clear();
       }).catch( err=> {
               console.log("tour组件ajax发生错误",err)
+              Toast.clear();
           }
       );
   },
   methods:{
+    closeblock(){
+      this.blockShow = false;
+    },
     toSearchv(){
        this.$router.push({path:'/searchv'});
     },
     showAll(){
       this.isShowAll = !this.isShowAll;
+      if (this.isShowAll) {
+        this.blockShow = true;
+      }else {
+        this.blockShow = false;
+      }
     },
     isall(){
       this.isSort = "all";
@@ -156,33 +218,49 @@ export default {
     },
     // 点击筛选类型的操作
     sortTitle(value){
-      console.log( value);
-      if (!Array.isArray(this.tourSearchData.productInfos)) {
-        console.log('type error!')
-        return
-      }
-      for (var i = 0;i<this.tourSearchData.productInfos.length; i++ ) {
-        // console.log(this.tourSearchData.productInfos[i].productTheme[0]);
-        // if ( this.tourSearchData.productInfos[i].productTheme[0] !== value){
-        //   this.tourSearchData.productInfos.splice(i+1,1);
-        // }
-      }
-      
+    
+      this.isShowAll = false;
+      this.blockShow = false;
+      this.currentfilter = value;
     }
   },
   computed:{
-    // returnAll(){
-    //   this.tourSearchData = this.tourSearchData.productInfos.sort(compare);
-    //   var compare = function (a, b) {//比较函数
-    //     return a.id-b.id;
-    //   }
-    // },
-  }
+     productList_c() {
+      if (this.currentfilter == "不限") {
+        return this.tourSearchData.productInfos;
+      } else {
+        return this.tourSearchData.productInfos.filter(item => {
+          return _findeindex(item.productTheme,theme=>{
+            // console.log(theme);
+            return theme===this.currentfilter;
+          })!==-1;
+          // return  item.productTheme.indexOf(this.currentfilter) !== -1;
+        });
+      }
+    },
+    label_c(){
+      return this.label.slice(0,8);
+    },
+  },
+  beforeRouteEnter (to, from, next) {
+    // ...
+    next ( vm =>{
+
+    })
+  },
 }
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped> 
   .tour
     background:#fff 
+    .blockpage
+      position:fixed
+      top:0 
+      left:0 
+      width:100%
+      z-index: 1
+      height:100%
+      background-color: rgba(0, 0, 0, 0.5)
     .header
       position:fixed
       top:0
@@ -234,17 +312,19 @@ export default {
         position:relative
         width:100% 
         border-bottom: 1px solid #e0dfdf
+        background:#fff
         .labelul
           flex:1
           padding:0 14px
           width:100% 
-          overflow:hidden
+          overflow-x: auto
+          overflow-y:hidden
           height:40px 
           line-height:40px
           .slide
             display:felx 
-            width:800px 
             overflow:hidden 
+            width:524px
             .item
               display:inline-block
               float:left
@@ -253,6 +333,10 @@ export default {
               text-align:center
               font-size:13px 
               color:#333
+              &.isclose
+                color:orange
+              &.noclose 
+                color:#333
         .drop
           width:35px 
           display:inline-block 
@@ -273,6 +357,12 @@ export default {
           border: 1px solid #e2dfdf
           border-left: none
           border-right: none
+          // &.labelAll-enter-active, &.labelAll-leave-active 
+          //   transition: all 0.3s 
+          // &.labelAll-enter
+          //   transform: translate3d(0, 40%, 0);
+          // &.labelAll-leave-active
+          //   transform: translate3d(0, 20%, 0);
           .allof
             overflow:hidden
             margin:14px 0 0 14px 
@@ -288,7 +378,12 @@ export default {
                 line-height: 36px
                 color: #666
                 background: #f5f5f5
+                border:1px solid #f5f5f5
                 font-size: 12px
+                &.divclose 
+                  border-color:#1296db
+                &.divno 
+                  border-color:#f5f5f5
       .select
         width:100%
         display:flex

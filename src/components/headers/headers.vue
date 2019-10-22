@@ -192,7 +192,7 @@ export default {
           height: 32px
           line-height: 32px
           .toload
-            color: #1d1de0
+            color: #38f
             font-size: 16px
           .load
             font-size:22px
