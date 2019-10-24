@@ -22,7 +22,8 @@ import VueCookies from 'vue-cookies'
 
 // 使用vue-mobile-calendar时间
 import Calendar from 'vue-mobile-calendar'
-// 使用vue-moment
+
+import Icon from 'vue-svg-icon/Icon.vue'
 
 // 调用自己写的js文件
 import checkpone from "./utils/checkphone.js"
@@ -39,6 +40,8 @@ Vue.use(VueLazyload,{
 })
 // vue左右滑动插件
 Vue.use(VueTouch, {name: 'v-touch'})
+
+Vue.component('icon', Icon)
 
 
 

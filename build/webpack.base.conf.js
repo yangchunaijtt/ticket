@@ -78,5 +78,10 @@ module.exports = {
     net: 'empty',
     tls: 'empty',
     child_process: 'empty'
+  },
+  // 后添加的部分
+  externals: {
+    'AMap': 'AMap',
+    "BMap": "BMap"
   }
 }

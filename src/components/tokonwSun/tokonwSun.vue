@@ -62,7 +62,7 @@
             {{item.playInfo}}
           </p>
           <div class="images" >
-            <img v-lazy="item.playImages.url" class="img" width="100%">
+            <img :src="item.playImages.url" class="img" width="100%" alt="">
           </div> 
         </div>
       </div>
@@ -71,6 +71,8 @@
 </template>
 
 <script>
+
+
 export default {
   props:{
     tosunData:{
@@ -92,6 +94,11 @@ export default {
     },
     // 监控数据
     
+  },
+  computed:{
+    returnHeight(){
+      return document.body.offsetHeight - 48;
+    },
   },
   created(){
 
@@ -132,7 +139,7 @@ export default {
         border-bottom:none 
     .reserve 
       position:relative
-      margin-top:56px 
+      top:56px 
       padding: 0 15px 15px
       background:#fff
       .header 
@@ -173,7 +180,7 @@ export default {
             color: #666
     .introduce
       position:relative
-      margin-top:56px 
+      top:56px 
       padding: 0 15px 15px
       padding-bottom:20px
       background:#fff

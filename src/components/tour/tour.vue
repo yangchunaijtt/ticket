@@ -46,23 +46,13 @@
           </div>
       </div>
     </div>
+    <!-- 滑动加载插件 -->
+
     <div class="content">
-      <ul class="ul">
-        <li class="item"    v-for="(item, index) in productList_c?productList_c:[]" >
-          <router-link :to="{path:'/details',query:{id:item.id}}" class="itemA">
-            <div class="center">
-              <img v-lazy="item.images[0]" width="100" class="img">
-              <div class="today">今日订</div>
-              <div class="words">
-                <p class="name">{{item.productName}}</p>
-                <div class="label" :class="item.productTheme[0]?'':'noboder'">{{item.productTheme[0]?item.productTheme[0]:""}}</div>
-                <p class="dgree">95%</p>
-                <div class="price">￥{{item.minPrice}}起</div>
-              </div>
-            </div>
-          </router-link>
-        </li>
-      </ul>
+      <vant-list v-model="loading" :finished="finished" @load="onLoad">
+        <!-- @click.native="toTicketdetails" -->
+        <recomment  :recommendpro="item"   v-for="(item, index) in productList_c?productList_c:[]" :key="index"></recomment>
+      </vant-list>
     </div>
   </div>
 </template>
@@ -71,7 +61,8 @@
 // 请求部分配置和引入
 import https from "../../https.js"
 import _findeindex from 'lodash/findIndex'
-import {Toast} from "vant"
+import {Toast,List} from "vant"
+import recomment from "../recommentpro/recommentpro"
 
 // 参数
 const ERR_OK = 200;
@@ -86,9 +77,13 @@ const tour_data = {
 
 export default {
   
+  components:{
+    recomment,
+    "vant-list": List,
+  },
   data(){
     return {
-      tourSearchData:{},
+      tourSearchData:[],
       blockShow:false,
       currentfilter: "不限",
       currenttheme: 0,
@@ -149,28 +144,60 @@ export default {
       isShowAll:false,  // 是否显示所有筛选
       isSort:"all",   // 排序的方式：all xia shang
       searchName:"",
+      // 循环子组件需要的数据
+      loading:false,
+      finished:false,
+      currnetPageindex: 1,
+      // 其他
     }
   },
   created(){
-    Toast.loading({ duration: 0, forbidClick: true, message: "加载中.请稍候" });
+    // Toast.loading({ duration: 0, forbidClick: true, message: "加载中.请稍候" });
     this.searchName = this.$utils.getUrlKey("search");
     tour_data.keyName = this.searchName;
-    https.fetchPost(tour_url,tour_data ).then((data) => {
-          // console.log("取到数据",data);
-          if ( data.status == ERR_OK ) {
-            this.tourSearchData = data.data.data
-            console.log("tour的数据",this.tourSearchData);
-          }else{
-            console.log("发送错误",data.status);
-          }
-          Toast.clear();
-      }).catch( err=> {
-              console.log("tour组件ajax发生错误",err)
-              Toast.clear();
-          }
-      );
+    // this.onLoad();
+    this.initialization();
   },
   methods:{
+    // 循环子组件需要的方法
+    initialization(){ //初始化函数
+      this.tourSearchData = [];
+      this.currnetPageindex = 1;
+      this.loading = true;//下拉加载中
+      this.finished = false;//下拉结束
+      if(this.loading){
+          this.onLoad();
+      }
+    },
+    async onLoad(value) {
+      // if ( null !== value && 'one' === value ) {
+      //   this.currnetPageindex ++ ;
+      // }
+      tour_data.pageIndex =  this.currnetPageindex;
+      https.fetchPost(tour_url,tour_data ).then((data) => {
+          // console.log("取到数据",data);
+          // if ( this.currnetPageindex === 1 ) {
+          //   this.tourSearchData = data.data.data.productInfos;
+          // }
+          console.log("tour的数据",this.tourSearchData.length);
+          // 后加的
+          if (data.data.code === "0") {
+            this.tourSearchData.push(...data.data.data.productInfos);
+            this.currnetPageindex++;
+          } else {
+            this.finished = true;
+          }
+          this.loading = false;
+            
+          
+        }).catch( err=> {
+              console.log("tour组件ajax发生错误",err)
+              this.loading = true;
+              this.finished = false;                
+            }
+        );
+    },
+    // 其他
     closeblock(){
       this.blockShow = false;
     },
@@ -203,22 +230,22 @@ export default {
       }
       // 判断对数据进行操作
       if ( this.isSort =="xia" ){
-        this.tourSearchData.productInfos.sort(function(a,b){
+        this.tourSearchData.sort(function(a,b){
             return b.minPrice-a.minPrice
         })
       }else if ( this.isSort =="shang" ){
-        this.tourSearchData.productInfos.sort(function(a,b){
+        this.tourSearchData.sort(function(a,b){
           return a.minPrice  -b.minPrice
         })
       }else if ( this.isSort =="all" ) {
-        this.tourSearchData.productInfos.sort(function(a,b){
+        this.tourSearchData.sort(function(a,b){
           return a.id  -b.id
         })
       }
     },
     // 点击筛选类型的操作
     sortTitle(value){
-    
+      // this.loading = false;      
       this.isShowAll = false;
       this.blockShow = false;
       this.currentfilter = value;
@@ -227,11 +254,12 @@ export default {
   computed:{
      productList_c() {
       if (this.currentfilter == "不限") {
-        return this.tourSearchData.productInfos;
+        
+        return this.tourSearchData;
       } else {
-        return this.tourSearchData.productInfos.filter(item => {
+        return this.tourSearchData.filter(item => {
           return _findeindex(item.productTheme,theme=>{
-            // console.log(theme);
+            
             return theme===this.currentfilter;
           })!==-1;
           // return  item.productTheme.indexOf(this.currentfilter) !== -1;
@@ -417,76 +445,5 @@ export default {
       left:0 
       margin-top:4px
       width:100%
-      .ul
-        background:#fff
-        .item
-          position:relative
-          padding:15px 10px 
-          border-bottom:1px solid #e0dfdf
-          .itemA
-            display:block 
-            width:100% 
-            height:100%
-            .center
-              display:flex
-              width:100% 
-              height:100%
-              .img
-                position:relative
-                flex:0 0 100px
-                overflow:hidden
-                margin-right:10px
-                height:100px 
-                border-radius:6px 
-              .today
-                // background-image: linear-gradient("90deg,#FFB800 0,#F90 100%")
-                position: absolute
-                top: 15px 
-                left: 10px
-                padding: 8px 4px 7px 
-                background:#FFB800
-                color: #fff
-                text-align: center
-                font-size: 11px
-                border-bottom-right-radius: 6px
-                line-height: 1px 
-              .words
-                flex:1
-                .name
-                  font-size: 16px
-                  line-height: 18px
-                  max-height: 18px
-                  color:#777
-                  font-weight:500
-                  overflow: hidden
-                  text-overflow: ellipsis
-                  -webkit-box-orient: vertical
-                  word-break: break-all
-                .label
-                  display: inline-flex
-                  margin:8px 0
-                  padding: 9px 3px 7px
-                  justify-content: center
-                  align-items: center
-                  -webkit-text-size-adjust: none
-                  color: #F80
-                  font-size: 11px
-                  line-height: 1px
-                  text-align: center
-                  color: #5CA2F8
-                  border: 1px solid #ADD0FB
-                  border-radius:2px
-                .noboder
-                  border:none
-                .dgree
-                  margin:6px 0
-                  font-size: 16px
-                  color: #5CA2F8;
-                .price
-                  position:absolute 
-                  right:15px 
-                  top:50%
-                  color:#FF5A68
-                  font-size:16px
-                  font-weight:500
+      background:#fff
 </style>

@@ -5,15 +5,15 @@
         <!-- 轮播图部分 -->
         <swiper :options="swiperOption" class="swiper-wrap"  ref="mySwiper" v-if="banner.length!=0">
           <swiper-slide v-for="(item,index) in banner" :key="index" class="item">
-            <img v-lazy="item"  class="bannerimg"/>
+            <img :src="item"  class="bannerimg" alt=""/>
           </swiper-slide>
           <!-- 常见的小圆点 -->
           <div class="swiper-pagination"  v-for="(item,index) in banner" :key="index" slot="pagination" ></div>
         </swiper>
       </div>
-      <router-link to="/index" class="return">
+      <span @click="returnLeft" class="return">
         <i class="icon iconfont iconzuo1"></i>
-      </router-link>
+      </span>
     </div>
     <div class="content">
       <div class="viewsport">

@@ -13,6 +13,7 @@
 <script>
 // 请求部分配置和引入
 import https from "../../https.js"
+import {Toast,}  from "vant"
 
 import tokonwSun from "@/components/tokonwSun/tokonwSun.vue"
 
@@ -35,6 +36,7 @@ export default {
     }
   },
   created(){
+    Toast.loading({ duration: 0, forbidClick: true, message: "加载中..." });
     this.searchId = this.$utils.getUrlKey("id");
     console.log(this.searchId);
     // console.log(this.searchId);
@@ -52,8 +54,9 @@ export default {
         }else {
           console.log("toknow页ajax出现问题",data.status)
         }
-       
+       Toast.clear();
     }).catch(err=>{
+        Toast.clear();
             console.log("toknow页ajax出现问题",err)
         }
     );

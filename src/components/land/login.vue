@@ -39,6 +39,7 @@
 </template>
 
 <script>
+
 import https from "../../https.js"
 
 import { Row, Col, Field, NavBar, Cell, CellGroup, Button } from "vant";
@@ -100,15 +101,17 @@ export default {
               tel: this.phonenum,
               name: this.phonenum,
               val: this.sms,
-              //this.$cookiess
+              
               wherefrom: this.$cookies.get("WHERE"),
               tuijian: window.localStorage.getItem("agency")
             }
           }
         );
         if (res_login.data.message == "success") {
+        
           this.loginstr = "登陆成功";
           this.isloading = false;
+
           this.$cookies.set("gdmobileusername", this.phonenum, 1 * 60 * 60);
           this.$cookies.set(
             "USERIDGDLY",
@@ -122,12 +125,10 @@ export default {
             1 * 60 * 60
           );
           this.$cookies.set("userid", res_login.data.data.tuijian, 1 * 60 * 60); //推荐人 0 or 123123
-          const res_getoaid = await http.fetchGet(
+          const res_getoaid = await https.fetchGet(
             "http://m.czgdly.com/transportation/getuserid.asp",
             {
-              params: {
-                mobile: this.phonenum
-              }
+              mobile: this.phonenum
             }
           );
           if (res_getoaid.data.error == 0) {
@@ -139,13 +140,16 @@ export default {
               ); //odid 0 or 123123
             }
           }
+
           console.log(typeof this.$cookies.get("userid"));
           if (this.$cookies.get("userid") === "0") {
             this.$cookies.set("userid", this.currentuid, 1 * 60 * 60); //uid 0 or 32532534
           }
+          
           setTimeout(() => {
             //这里要跳转
             // console.log("要跳转的url", this.fullPath);
+            console.log('路由值',this.fullPath);
             this.$router.push(this.fullPath);
           }, 500);
         } else {
@@ -169,7 +173,7 @@ export default {
       let sec = 59;
       this.canuse = true;
       https.fetchGet("http://m.czgdly.com/transportation/login/sendcode.asp", {
-          params: { tel: this.phonenum, c: "1" }
+           tel: this.phonenum, c: "1" 
         })
         .then(res => {
           console.log("发送验证码返回的信息", res);
