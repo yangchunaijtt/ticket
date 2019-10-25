@@ -1,6 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
+import Cookie from "vue-cookies";
+import {
+  howtogo
+} from '../utils/agencytool';
+
+
 // 下面是引入的模板
 import index from "@/components/index/index"
 import land  from "@/components/land/login"
@@ -15,7 +21,7 @@ import ordertime from "@/components/ordertime/ordertime"
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
@@ -74,3 +80,43 @@ export default new Router({
     }
   ]
 })
+
+
+router.beforeEach((to, from, next) => {
+  console.log("全局路由守卫to", to);
+  console.log("全局路由守卫from", from);
+  // window.scroll(0, 0);
+  const torouter = to.name;
+  const secret = Cookie.get("usersecret");
+  const gdmobileusername = Cookie.get("gdmobileusername");
+  const gdmobileuserphone = Cookie.get("gdmobileuserphone");
+  const USERIDGDLY = Cookie.get("USERIDGDLY");
+  const userid = Cookie.get("userid");
+
+  // agency = localStorage.getItem('agency')
+  let agency = to.query.uid || userid || localStorage.getItem("agency"); //代理;
+  console.log('agency')
+  if (agency !== '' && typeof agency !== 'undefined' && agency !== localStorage.getItem('agency')) {
+    localStorage.setItem("agency", agency);
+  }
+
+  switch (torouter) {
+    case "order": //needlogin
+    case "orderlist": //needlogin
+    case "orderdetails": //needlogin
+    case "pay": //needlogin
+      console.log("needtologin");
+      if (secret && gdmobileusername && gdmobileuserphone) {
+        howtogo(router, to, agency, next);
+      } else {
+        next("/land");
+        // alert('登陆');
+      }
+      break;
+    default:
+      howtogo(router, to, agency, next);
+      break;
+  }
+});
+
+export default router;

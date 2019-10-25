@@ -52,6 +52,8 @@ notice.vue
 18:orderdetails.vue
 订单详情信息页，进行订单操作
 
+19：pay
+支付页，下单后的支付页。
 
 二：使用到的插件
 

@@ -74,6 +74,7 @@ export default {
   },
   methods: {
     gotodetails() {
+      console.log(this.order.partnerOrderNo);
       this.$router.push({
         name: "orderdetails",
         query: {

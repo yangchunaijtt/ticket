@@ -26,10 +26,19 @@ export default {
       totalpage: 1,
       currentPage: 0,
       loading: false,
-      finished: false
+      finished: false,
     };
   },
   methods: {
+    initialization(){ //初始化函数
+      this.orderlist = [];
+      this.currentPage = 0;
+      this.loading = true;//下拉加载中
+      this.finished = false;//下拉结束
+      if(this.loading){
+          this.onLoad();
+      }
+    },
     onClickLeft() {
       this.$router.go(-1);
     },
@@ -72,7 +81,10 @@ export default {
   },
   beforeRouteEnter: (to, from, next) => {
     next();
-  }
+  },
+  created(){
+    this.initialization();
+  },
 };
 </script>
 

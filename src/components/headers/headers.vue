@@ -183,6 +183,7 @@ export default {
               color: #999
               text-overflow: ellipsis
               font-size: 13px
+              border:none
         .people
           position: absolute
           right: 10px

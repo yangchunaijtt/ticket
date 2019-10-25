@@ -71,6 +71,7 @@
 <script>
 
 import https from "../../https.js"
+import Cookie from "../../utils/cookie.js"
 
 import { NavBar, Dialog, Cell, CellGroup, Toast } from "vant";
 export default {
@@ -101,14 +102,19 @@ export default {
       }
     },
     product() {
+      // console.log("测试错误",this.orderinfo);
       if (!this.orderinfo) {
         return {};
+       
       }
       if (typeof this.orderinfo.product == "string") {
         return JSON.parse(this.orderinfo.product);
+       
       } else {
         return this.orderinfo.product;
+        
       }
+      
     },
     orderstatus() {
       if (!this.orderinfo) {
@@ -197,12 +203,13 @@ export default {
         message: "加载中..."
       });
       //导航
-      const productinfo_res = await this.getScinInfo(this.orderinfo.pid);
-      console.log("位置", productinfo_res.data.data.scenicInfos.placeCity);
-      Toast.clear();
-      window.location.href = `https://apis.map.qq.com/uri/v1/search?keyword=${place}&region=${
-        productinfo_res.data.data.scenicInfos.placeCity
-      }&referer=WE3BZ-OY7LD-IZW4M-PLRHU-SOMWH-MOFSI`;
+      // 导航内容没有，后面有了在重写
+      // const productinfo_res = await this.getScinInfo(this.orderinfo.pid);
+      // console.log("位置", productinfo_res.data.data.scenicInfos.placeCity);
+      // Toast.clear();
+      // window.location.href = `https://apis.map.qq.com/uri/v1/search?keyword=${place}&region=${
+      //   productinfo_res.data.data.scenicInfos.placeCity
+      // }&referer=WE3BZ-OY7LD-IZW4M-PLRHU-SOMWH-MOFSI`;
     },
     getOrderCancel() {
       if (this.refundStatus != "申请退票") {
@@ -218,8 +225,7 @@ export default {
         message: "加载中..."
       });
       console.log("退款");
-      https
-        .fetchPost(
+      https.fetchPost(
           "api/LvmamaScenicTickets/ScenicOrders/ScenicOrderCancel" +
             this.tokenparams,
           {
@@ -241,17 +247,9 @@ export default {
               title: "错误",
               message: res.data.message
             });
-            // return;
+            
           } else {
-            // let title="";
-
-            // if(res.data.data.requestStatus=='REVIEWING'){
-            //   title="错误"
-            // }else if(res.data.data.requestStatus=='REVIEWING'){
-            //   title="申请成功"
-            // }else if(res.data.data.requestStatus=='PASS'){
-            //   title="退款成功"
-            // }
+           
             Dialog.alert({
               title: "提示",
               message: "退款申请已经提交"
@@ -270,17 +268,7 @@ export default {
       }&eid=${this.orderinfo.orderId}&traveldate=${
         this.product.visitDate
       }&lastpaytime=${this.orderinfo.waitPaymentTime}`;
-      // this.$router.push({
-      //   name: "pay",
-      //   query: {
-      //     goodsname: this.goodinfo.goodsName,
-      //     payprice: this.orderinfo.needPayPrice,
-      //     orderno: this.orderinfo.partnerOrderNo,
-      //     eid: this.orderinfo.orderId, //驴妈妈返回的订单id
-      //     traveldate: this.product.visitDate,
-      //     lastpaytime: this.orderinfo.waitPaymentTime
-      //   }
-      // });
+     
     },
     onClickLeft() {
       this.$router.go(-1);
@@ -289,14 +277,17 @@ export default {
   beforeRouteEnter: async (to, from, next) => {
     const orderquery = to.query;
     console.log("订单信息", orderquery);
+    console.log("cookie",Cookie);
+    // 这个报错了
     const tokenparams = () => {
-      
-      return `?token=${this.$cookies.get("USERIDGDLY")}|${this.$cookies.get(
+      return `?token=${Cookie.get("USERIDGDLY")}|${Cookie.get(
         "usersecret"
-      )}|${this.$cookies.get("gdmobileuserphone")}|${this.$cookies.get("WHERE")}`;
+      )}|${Cookie.get("gdmobileuserphone")}|${Cookie.get("WHERE")}`;
     };
-    https
-      .fetchGet(
+    // 返回的是：?token=13057|16f37eed7a4315b2236a247a15596e7f|13218997301|11
+    //报错结尾
+    
+    https.fetchGet(
         "api/LvmamaScenicTickets/ScenicLocalOrders/GetScenicOrderByNo/" +
           orderquery.partnerOrderNo +
           tokenparams()
@@ -318,13 +309,23 @@ export default {
         `api/LvmamaScenicTickets/GoodsLocalInfos/GetGoodsInfos/${goodid}`
       );
     };
-  }
+    // 后添加部分
+    // next(vm => {
+
+    // })
+  },
+  mounted(){
+
+  },
 };
 </script>
 
 <style lang="stylus"  rel="stylesheet/stylus" scoped>
 
-
+.orderdetails{
+  color: #2c3e50
+  font-size:15px 
+}
 .van-cell__title {
   display:flex
   flex-direction: row
