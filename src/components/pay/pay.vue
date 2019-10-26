@@ -34,9 +34,11 @@
 </template>
 
 <script>
-import { $axios } from "../utils/axios";
+import https from "../../https.js";
 import { NavBar, SubmitBar } from "vant";
 import moment from "moment";
+import axios from 'axios'
+
 export default {
   components: {
     "van-nav-bar": NavBar,
@@ -124,22 +126,20 @@ export default {
       paysignurl = gd_paysignurl;
     }
     const getIp = function() {
-      return $axios.get(
+      return https.fetchGet(
         "http://m.czgdly.com/transportation/airplane/beecloud/getCurrentIp.asp"
       );
     };
     const getSign = function(t_title, t_orderno, t_price) {
-      return $axios.get(paysignurl, {
-        params: {
-          title: t_title,
-          amount: amount, //amount
-          orderno: t_orderno
-        }
+      return https.fetchGet(paysignurl, {
+        title: t_title,
+        amount: amount, //amount
+        orderno: t_orderno
       });
     };
-
-    $axios.all([getIp(), getSign(title, orderno, amount)]).then(
-      $axios.spread((ip, sig) => {
+    console.log("this.$axios",axios);
+    axios.all([getIp(), getSign(title, orderno, amount)]).then(
+      axios.spread((ip, sig) => {
         console.log("ip", ip.data);
         console.log("sign", sig);
         next(vm => {
@@ -162,7 +162,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="stylus"  rel="stylesheet/stylus" scoped>
 .pay {
   // background-color: #fff;
   color: #999;

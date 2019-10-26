@@ -18,6 +18,7 @@ import order from "@/components/order/order"
 import orderlist from "@/components/orderlist/orderlist"
 import orderdetails from "@/components/orderdetails/orderdetails"
 import ordertime from "@/components/ordertime/ordertime"
+import pay from "@/components/pay/pay.vue"
 
 Vue.use(Router)
 
@@ -77,7 +78,12 @@ const router = new Router({
       path:"/ordertime",
       name:"ordertime",
       component:ordertime
-    }
+    },
+    {
+      path: "/pay",
+      name: "pay",
+      component: pay
+    },
   ]
 })
 
