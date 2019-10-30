@@ -3,11 +3,14 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './store'//引入store
+
 import "@/common/stylus/index.styl"
 import axios from 'axios';
 import QS from 'qs'
 import utils from "./common/js/urlGet.js" //获取url参数
 import VueTouch from 'vue-touch'
+import BusPlugin from "./utils/bus";
 // 使用minui
 import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
@@ -29,7 +32,7 @@ import Icon from 'vue-svg-icon/Icon.vue'
 import checkpone from "./utils/checkphone.js"
 
 
-
+Vue.use(BusPlugin);
 Vue.use(VueCookies)
 Vue.use(VueAwesomeSwiper, /* { default global options } */)
 // 使用懒加载
@@ -53,10 +56,39 @@ Vue.config.productionTip = false
 Vue.prototype.$utils = utils; //注册全局方法
 Vue.use(checkpone);
 
+
+store.registerModule("vux", {
+  state: {
+    demoScrollTop: 0,
+    isLoading: false,
+    direction: "forward"
+  },
+  mutations: {
+    updateDemoPosition(state, payload) {
+      state.demoScrollTop = payload.top;
+    },
+    updateLoadingStatus(state, payload) {
+      state.isLoading = payload.isLoading;
+    },
+    updateDirection(state, payload) {
+      state.direction = payload.direction;
+    }
+  },
+  actions: {
+    updateDemoPosition({ commit }, top) {
+      commit({
+        type: "updateDemoPosition",
+        top: top
+      });
+    }
+  }
+});
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
 })

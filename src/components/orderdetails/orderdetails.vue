@@ -89,7 +89,7 @@ export default {
   },
   computed: {
     productUrl() {
-      return `/ticket?id=${this.orderinfo.pid}`;
+      return `/details?id=${this.orderinfo.pid}`;
     },
     booker() {
       if (!this.orderinfo) {

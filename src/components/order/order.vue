@@ -46,7 +46,7 @@
             </div>
             <div class="datetime"  
               @click="chooseCurrentDate(2)"
-              :class="{'choosedateitem':currentChooseIndex==2,'no':getcorrespondingPrice(p_formatDate(1,'YYYY-MM-DD'))=='不可订'}">
+              :class="{'choosedateitem':currentChooseIndex==2,'no':getcorrespondingPrice(p_formatDate(2,'YYYY-MM-DD'))=='不可订'}">
               <p>后天{{orderDataTime(2)}}</p>
               <p>￥{{getcorrespondingPrice(p_formatDate(2,'YYYY-MM-DD')) }}</p>
             </div>
@@ -63,40 +63,17 @@
           <span class="number">购买数量</span>
           <div class="click">
             <i class="dec-count" @click="decCount"></i>
-            <input type="text"  class="list"  v-model="number">
+            <input type="text"  class="list"  v-model="ticketnum">
             <i class="add-count" @click="addcount"></i>
           </div>
         </div>
       </div>
-      <div class="people">
-        <div class="title"> 
-          取票人信息
-          <span class="tell">【网络预定需填写一个游客信息】</span>
-        </div>
-        <div class="fill">
-          <div class="name item">
-            <span class="span">姓名</span>
-            <div class="inputdiv">
-              <input type="text" :placeholder="idNameTest" class="input" @blur="testName" v-model="idName">
-              <div class="nametest filltest" v-show="idNameNo">姓名格式不正确</div>
-            </div>
-          </div>
-          <div class="phone item">
-            <span class="span">手机号</span>
-            <div class="inputdiv">
-              <input type="text" :placeholder="phoneNumberTest" class="input" @blur="testPhone" v-model="phoneNumber">
-              <div class="phonetest filltest" v-show="phoneNumberNo">手机号格式不正确</div>              
-            </div>
-          </div>
-          <div class="id item">
-            <span class="span">身份证</span>
-            <div class="inputdiv">
-              <input type="text" placeholder="请输入证件号码" class="input" v-model="idNumber">
-              <div class="phonetest filltest" v-show="idNumberNo">证件号码格式错误</div>    
-            </div>
-          </div>
-        </div>
-      </div>
+      <!-- 添加人数选择的地方 -->
+      <travelpeopleList @isError="getisErrors"
+                          :traveller="goodsInfo.traveller"
+                          :travelpeoplenums="ticketnum">
+        
+      </travelpeopleList>
     </div>
     <div class="bottom" v-show="!ordertimeshow">
       <div class="price">
@@ -119,9 +96,13 @@
 <script>
 
 import popticketInfo from "../popticketInfo/popticketInfo.vue"
+import travelpeopleList from "../travelpeopleList/travelpeopleList"
 import ordertime from "../ordertime/ordertime"
 import moment from "moment"
 import axios from 'axios'
+
+
+import { mapGetters, mapMutations, mapActions, mapState } from "vuex";
 
 // 设置moment
 moment.locale("zh-cn", {
@@ -148,6 +129,13 @@ import { $axios } from "../../utils/axios.js"
 const goodsInfos_url = "http://58.216.175.118:86/api/LvmamaScenicTickets/GoodsLocalInfos/GetGoodsInfos/";
 const ERR_OK = 200;
 
+Number.prototype.toCeil = function(num) {
+  return Math.ceil(this * Math.pow(10, num)) / Math.pow(10, num);
+};
+Number.prototype.toRound = function(num) {
+  return Math.round(this * Math.pow(10, num)) / Math.pow(10, num);
+};
+
 export default {
 
   name:"order",
@@ -163,20 +151,13 @@ export default {
     "van-icon": Icon,
     ordertime,
     popticketInfo,
+    travelpeopleList,
   },
   data(){
     return {
       
       number:1,  
-      // 检测用户输入的三个名目分类
-      idName:"",
-      idNameTest:"必填",
-      idNameNo:false,
-      phoneNumber:null,
-      phoneNumberTest:"接收取票短线凭证",
-      phoneNumberNo:false,
-      idNumber:null,
-      idNumberNo:false,
+      
       // 手机端时间选择数据
       // 是否显示预定须知部分内容
       ticketInfoShow:false,
@@ -210,10 +191,15 @@ export default {
           date: -1
         }
       },
+      // 提交需要的信息
+      traveldate: "",
       salePrice: null, //提交给对象
       goodinfo: null,
       // 其他
-
+      people:{},
+      istravelError:false,
+      // 价格数目
+      ticketnum:1,
     }
   },
   created(){
@@ -225,6 +211,7 @@ export default {
         if ( data.status == ERR_OK ) {
           console.log("goodsInfo",data.data);
           this.goodsInfo = data.data.data;
+           // vuex数据
         }else {
           console.log("details页ajax出现问题",data.status)
         }
@@ -356,9 +343,18 @@ export default {
   },
   mounted(){
     this.eleHeight = this.$refs.order.offsetHeight;
-    // console.log(this.eleHeight);
+  
   },
   methods:{
+    getisErrors(err){
+      console.log(err);
+      this.istravelError = err;
+    },
+    //vuex赋值
+    ...mapMutations({
+      addtravers: "ADDTRAVERS",
+      removeLasttravers: "REMOVELASTTRAVEL"
+    }),
     // 返回时间
     orderDataTime(number){
       // 
@@ -370,13 +366,13 @@ export default {
     },
     // 加数目和减数目操作
     decCount(){
-      if ( this.number > 0) {
-        this.number -- ;
+      if ( this.ticketnum > 0) {
+        this.ticketnum -- ;
       }
     },
     addcount(){
-      if ( this.number >= 0) {
-        this.number ++;
+      if ( this.ticketnum >= 0) {
+        this.ticketnum ++;
       }
     },
     // 用户点击选择
@@ -482,36 +478,7 @@ export default {
     hiddenCandendar(){
       this.ordertimeshow = false;
     },
-    // 手动输入数量
-    countBlur(){
-      // this.number = 
-      console.log(this.number);
-    },
-    // 检验用户输入
-    testName(){
-      let regxm = /^[\u4E00-\u9FA5]{2,4}$/;
-      if (this.idName ==="") {
-        this.idNameTest ="请输入姓名";
-        this.idNameNo = true;
-      }else if(!regxm.test(this.idName)){
-        // this.idNameTest ="姓名不能含有非法字符！";
-        this.idNameNo = true;
-        // this.idName = "";
-      }else {
-        this.idNameNo = false;
-      }
-    },
-    testPhone(){
-      if (this.phoneNumber === "") {
-        this.phoneNumberTest = "请填写手机号";
-      }else if(!(/^1[3456789]\d{9}$/.test(this.phoneNumber))){ 
-        // this.phoneNumberTest = "手机号有误，请重填！";
-        this.phoneNumberNo = true;        
-        // this.phoneNumber = "";
-      }else {
-        this.phoneNumberNo = false; 
-      }
-    },
+    
     //日历选择
     selectTime(){
       console.log(this.$refs.picket)
@@ -559,6 +526,21 @@ export default {
     },
     // 提交订单
     CreatedOrder(){
+      // 进入前先验证下
+      if (this.traveldate === "") {
+        Toast("请选择游玩日期");
+        return;
+      }else if ( this.idName =="") {
+        Toast("请填写姓名");
+        return;
+      }else if (this.phoneNumber === ""){
+        Toast("请填写联系人手机号");
+        return;
+      }else if (this.idNumber ===""){
+        Toast("请填写身份证信息");
+        return;
+      }
+
       // 1：先验证下，输入的数据是否正确
        const creatorderparams = {};
       creatorderparams.orderAmount = this.orderAmount / 100; //提交给驴妈妈的总价
@@ -571,12 +553,13 @@ export default {
         sellPrice: this.salePrice.sellprice, //提交给驴妈妈的单价
         visitDate: this.traveldate
       };
+      console.log("creatorderparams",creatorderparams);
       creatorderparams.booker = this.traversinfo[0];
       creatorderparams.travellers = this.traversinfo;
 
-      console.log("========================");
-      console.log(creatorderparams);
-      console.log("========================");
+      
+      // console.log("creatorderparams",creatorderparams);
+    
       // 显示加载中
       Toast.loading({
         duration: 0,
@@ -629,17 +612,21 @@ export default {
       );
 
     },
-    
-
 
   },
   computed:{
+    // vuex赋值
+    ...mapState({
+      traversinfo: "traversInfo"
+    }),
+   
     // 应付和老的钱    
     returnNowPrice(){
-      return this.number * this.goodsInfo.nowPrice;
+      return this.ticketnum * this.goodsInfo.nowPrice;
     },
     returnOldPrice(){
-      return this.number  *  this.goodsInfo.nowMPrice;
+
+      return this.ticketnum  *  this.goodsInfo.nowMPrice;
     },
     // 第一次验证需要的数据
     tokenparams() {
@@ -650,58 +637,35 @@ export default {
     // 折扣价
     discountPrice() {
       //折扣价
-      // if (!this.goodinfo) {
-      //   return 0;
-      // }
-      // const officaldispirice = this.goodinfo.activityInfo.number || 0;
-      // let tmpPrice =
-      //   ((this.salePrice.payprice - officaldispirice) * 100 * 0.997).toRound(
-      //     0
-      //   ) * this.ticketnum;
-      // return tmpPrice;
+       //折扣价
+      if (!this.goodinfo) {
+        return 0;
+      }
+      const officaldispirice = this.goodinfo.activityInfo.number || 0;
+      // console.log("折扣价11",officaldispirice,this.goodinfo);
+      let tmpPrice =
+        ((this.salePrice.payprice - officaldispirice) * 100 * 0.997).toRound(
+          0
+        ) * this.ticketnum/100;
+        // console.log("折扣价",tmpPrice,);
+      return tmpPrice;
     },
     // 
   },
   watch:{
-    // 检测用户的三个输入
-    idName(oldVlaue,newValue){
-      let regxm = /^[\u4E00-\u9FA5]{2,4}$/;
-      if (this.idName ==="") {
-        this.idNameTest ="请输入姓名";
-        this.idNameNo = true;
-      }else if(!regxm.test(this.idName)){
-        // this.idNameTest ="姓名不能含有非法字符！";
-        this.idNameNo = true;
-        // this.idName = "";
-      }else {
-        this.idNameNo = false;
-      }
-    },
-    phoneNumber(value){
-      if (this.phoneNumber === "") {
-        this.phoneNumberTest = "请填写手机号";
-      }else if(!(/^1[3456789]\d{9}$/.test(this.phoneNumber))){ 
-        // this.phoneNumberTest = "手机号有误，请重填！";
-        this.phoneNumberNo = true;        
-        // this.phoneNumber = "";
-      }else {
-        this.phoneNumberNo = false; 
-      }
-    },
-    idNumber(value){
-      let reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;  
-       if(reg.test(this.idNumber) === false)  {  
-            this.idNumberNo = true;
-        }else {
-          this.idNumberNo = false;
-        }  
-    },
+    
     // 检测购买数目输入
-    number(val){
-      if (val <=0) {
-        val = 1;
+    ticketnum(val){
+      if (val<this.goodinfo.minimum) {
+        Toast(`最少预定${this.goodinfo.minimum}张`);
+        this.ticketnum  ++;
+      }else if (val>this.goodinfo.maximum) {
+        Toast(
+        `最多预定${this.goodinfo.maximum}张`
+        ); 
+        this.ticketnum  --;
       }
-      this.number = val;      
+        
     },
   },
  
@@ -843,51 +807,6 @@ export default {
               background-repeat: no-repeat
               background-image: url('//pics.lvjs.com.cn/mobile/coding/v750/ticket/img/add_able.png')
               background-size: 100%
-      .people 
-        margin-top:10px 
-        padding:0px 16px 0px 10px
-        background:#fff
-        border-radius: 5px
-        box-shadow: 0 0 5px #e8e8e8
-        .title
-          height: 35px;
-          line-height:35px
-          color:#000
-          font-size:15px
-          font-weight:520
-          overflow:hidden
-          .tell
-            color:#999
-            font-size:12px
-        .fill
-          .item
-            display:flex 
-            line-height:45px 
-            border-bottom:1px solid #dcdcdc
-          .item:last-child
-              border-bottom:none 
-            .span
-              width:52px 
-              height:45px
-              overflow:hidden
-              color:#333
-              font-size:14px 
-              text-align:left
-            .inputdiv
-              flex:1
-              width:100%
-              min-height:45px
-              .input
-                width:100%
-                height:40px 
-                line-height:40px 
-                color:#333
-                font-size:13px
-              .filltest 
-                line-height:15px 
-                color: #f44
-                font-size: 12px
-                text-align:left
     .bottom
       display:flex
       position:fixed
