@@ -4,7 +4,7 @@
       取票人信息
       <span class="tell">【网络预定需填写一个游客信息】</span>
     </div>
-    <travelpeople :traveller="traveller"  :cardType="traveller.credentialsType" @isError="gerError">
+    <travelpeople :traveller="traveller"  :cardType="cardType" @isError="gerError">
 
     </travelpeople>
   </div>
@@ -21,13 +21,13 @@ export default {
   props:{
     traveller: {
       type: Object,
-      default: {},
+      default: () => {return {}}
       // required: true
     },
-    travelpeoplenums: {
-      type: Number,
-      default: 1
-    },
+    cardType:{
+      type:String,
+      default:String
+    }
   },
   data(){
     return {
@@ -36,7 +36,7 @@ export default {
   },  
   methods:{
     gerError(err){
-      this.$emit(err);
+      this.$emit('isError',err);
     }
   },
 }

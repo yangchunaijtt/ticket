@@ -35,19 +35,19 @@
             <div class="datetime" 
               @click="chooseCurrentDate(0)"
               :class="{'choosedateitem':currentChooseIndex==0,'no':getcorrespondingPrice(p_formatDate(0,'YYYY-MM-DD'))=='不可订'}">
-              <p>今天{{orderDataTime(0)}}</p>
+              <p>今天{{p_formatDate(0)}}</p>
               <p>￥{{getcorrespondingPrice(p_formatDate(0,'YYYY-MM-DD')) }}</p>
             </div>
             <div class="datetime" 
               @click="chooseCurrentDate(1)"
              :class="{'choosedateitem':currentChooseIndex==1,'no':getcorrespondingPrice(p_formatDate(1,'YYYY-MM-DD'))=='不可订'}">
-              <p>明天{{orderDataTime(1)}}</p>
+              <p>明天{{p_formatDate(1)}}</p>
               <p>￥{{getcorrespondingPrice(p_formatDate(1,'YYYY-MM-DD')) }}</p>
             </div>
             <div class="datetime"  
               @click="chooseCurrentDate(2)"
               :class="{'choosedateitem':currentChooseIndex==2,'no':getcorrespondingPrice(p_formatDate(2,'YYYY-MM-DD'))=='不可订'}">
-              <p>后天{{orderDataTime(2)}}</p>
+              <p>后天{{p_formatDate(2)}}</p>
               <p>￥{{getcorrespondingPrice(p_formatDate(2,'YYYY-MM-DD')) }}</p>
             </div>
             <div class="datetime" 
@@ -63,7 +63,7 @@
           <span class="number">购买数量</span>
           <div class="click">
             <i class="dec-count" @click="decCount"></i>
-            <input type="text"  class="list"  v-model="ticketnum">
+            <input  class="list"  v-model="ticketnum" type="number">
             <i class="add-count" @click="addcount"></i>
           </div>
         </div>
@@ -71,7 +71,8 @@
       <!-- 添加人数选择的地方 -->
       <travelpeopleList @isError="getisErrors"
                           :traveller="goodsInfo.traveller"
-                          :travelpeoplenums="ticketnum">
+                          :cardType="goodsInfo.traveller.credentialsType"
+                          >
         
       </travelpeopleList>
     </div>
@@ -196,7 +197,6 @@ export default {
       salePrice: null, //提交给对象
       goodinfo: null,
       // 其他
-      people:{},
       istravelError:false,
       // 价格数目
       ticketnum:1,
@@ -343,11 +343,10 @@ export default {
   },
   mounted(){
     this.eleHeight = this.$refs.order.offsetHeight;
-  
+    
   },
   methods:{
     getisErrors(err){
-      console.log(err);
       this.istravelError = err;
     },
     //vuex赋值
@@ -366,13 +365,17 @@ export default {
     },
     // 加数目和减数目操作
     decCount(){
-      if ( this.ticketnum > 0) {
+      if ( this.ticketnum > this.goodinfo.minimum) {
         this.ticketnum -- ;
+      }else {
+        this.ticketnum = this.goodinfo.minimum;
       }
     },
     addcount(){
-      if ( this.ticketnum >= 0) {
+      if ( this.ticketnum < this.goodinfo.maximum) {
         this.ticketnum ++;
+      }else {
+        this.ticketnum = this.goodinfo.maximum;
       }
     },
     // 用户点击选择
@@ -527,21 +530,13 @@ export default {
     // 提交订单
     CreatedOrder(){
       // 进入前先验证下
-      if (this.traveldate === "") {
-        Toast("请选择游玩日期");
-        return;
-      }else if ( this.idName =="") {
-        Toast("请填写姓名");
-        return;
-      }else if (this.phoneNumber === ""){
-        Toast("请填写联系人手机号");
-        return;
-      }else if (this.idNumber ===""){
-        Toast("请填写身份证信息");
+      if (!this.istravelError) {
+        Toast(this.istravelError);
         return;
       }
 
       // 1：先验证下，输入的数据是否正确
+      console.log("提交的参数",this.salePrice.sellprice * this.ticketnum * 100);
        const creatorderparams = {};
       creatorderparams.orderAmount = this.orderAmount / 100; //提交给驴妈妈的总价
       // creatorderparams.partnerOrderNo="tst10086";
@@ -553,12 +548,12 @@ export default {
         sellPrice: this.salePrice.sellprice, //提交给驴妈妈的单价
         visitDate: this.traveldate
       };
-      console.log("creatorderparams",creatorderparams);
+      console.log("creatorderparams111",creatorderparams);
       creatorderparams.booker = this.traversinfo[0];
       creatorderparams.travellers = this.traversinfo;
 
       
-      // console.log("creatorderparams",creatorderparams);
+      console.log("creatorderparams222",creatorderparams);
     
       // 显示加载中
       Toast.loading({
@@ -615,6 +610,14 @@ export default {
 
   },
   computed:{
+    orderAmount() {
+      //提交给驴妈妈的价格
+      if (this.salePrice) {
+        return this.salePrice.sellprice * this.ticketnum * 100;
+      } else {
+        return 0;
+      }
+    },
     // vuex赋值
     ...mapState({
       traversinfo: "traversInfo"
@@ -656,20 +659,20 @@ export default {
     
     // 检测购买数目输入
     ticketnum(val){
-      if (val<this.goodinfo.minimum) {
+      if (val<=this.goodinfo.minimum) {
         Toast(`最少预定${this.goodinfo.minimum}张`);
-        this.ticketnum  ++;
-      }else if (val>this.goodinfo.maximum) {
+        this.ticketnum   = this.goods.minimum;
+      }else if (val>=this.goodinfo.maximum) {
         Toast(
         `最多预定${this.goodinfo.maximum}张`
         ); 
-        this.ticketnum  --;
+        this.ticketnum   = this.goodinfo.maximum;
+      }else if ( this.ticketnum === "") {
+        this.ticketnum   = this.goods.minimum;
       }
         
     },
   },
- 
-    
   
 }
 </script>

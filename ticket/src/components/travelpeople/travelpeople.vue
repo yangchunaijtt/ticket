@@ -3,35 +3,36 @@
       <div class="name item">
         <span class="span">姓名</span>
         <div class="inputdiv">
-          <input type="text" placeholder="必填" class="input" @blur="testName" v-model="people.idName">
+          <input type="text" placeholder="必填" class="input" @blur="testName" v-model="people.name">
           <div class="nametest filltest" v-show="idNameNo">姓名格式不正确</div>
         </div>
       </div>
       <div class="phone item">
         <span class="span">手机号</span>
         <div class="inputdiv">
-          <input type="text" placeholder="接收取票短线凭证" class="input" @blur="testPhone" v-model="people.phoneNumber">
+          <input type="text" placeholder="接收取票短线凭证" class="input" @blur="testPhone" v-model="people.mobile">
           <div class="phonetest filltest" v-show="phoneNumberNo">手机号格式不正确</div>              
         </div>
       </div>
       <div class="id item">
         <span class="span">身份证</span>
         <div class="inputdiv">
-          <input type="text" placeholder="请输入证件号码" class="input" v-model="people.idNumber" @blur="idNumber">
+          <input type="text" placeholder="请输入证件号码" class="input" v-model="people.credentials" @blur="idNumber">
           <div class="phonetest filltest" v-show="idNumberNo">证件号码格式错误</div>    
         </div>
       </div>
-      
     </div>  
 </template>
 
 <script>
 import { mapGetters, mapMutations } from "vuex";
+import { isError } from 'util';
 
 export default {
   props:{
      traveller: {
-      required: true
+      required: true,
+      default:() => {return {}}
     },
     cardType: {
       type: String,
@@ -54,7 +55,8 @@ export default {
       idNumberNo:false,
       // 其他
       activeNames: true,
-      currentCard: ""
+      currentCard: "",
+      isError:false,
     }
   },
   methods:{
@@ -71,9 +73,9 @@ export default {
     // 检验用户输入
     testName(){
       let regxm = /^[\u4E00-\u9FA5]{2,4}$/;
-      if (this.people.idName ==="") {
+      if (this.people.name ==="") {
         this.idNameNo = true;
-      }else if(!regxm.test(this.people.idName)){
+      }else if(!regxm.test(this.people.name)){
         // this.idNameTest ="姓名不能含有非法字符！";
         this.idNameNo = true;
         // this.idName = "";
@@ -82,7 +84,7 @@ export default {
       }
     },
     testPhone(){
-      if(!(/^1[3456789]\d{9}$/.test(this.people.phoneNumber))){ 
+      if(!(/^1[3456789]\d{9}$/.test(this.people.mobile))){ 
         // this.phoneNumberTest = "手机号有误，请重填！";
         this.phoneNumberNo = true;        
         // this.phoneNumber = "";
@@ -92,7 +94,7 @@ export default {
     },
     idNumber(){
       let reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;  
-       if(reg.test(this.people.idNumber) === false)  {  
+       if(reg.test(this.people.credentials) === false)  {  
             this.idNumberNo = true;
         }else {
 
@@ -102,7 +104,7 @@ export default {
   },
   mounted() {
     // this.$validator.validate();
-    console.log("添加游玩人数到store",this.cardList);
+    console.log("添加游玩人数到store",this.cardType);
     this.currentCard = this.cardList[0];
     this.people.credentialsType=this.currentCard;
     this.addtravers(this.people);
@@ -110,44 +112,34 @@ export default {
   },
   computed:{
     cardList() {
-      // console.log("111cardType",this.cardType);
-      let arr = this.cardType.split("-");
+      console.log("111cardType",this.cardType);
+      // let arr = this.cardType.split("-");
       return this.cardType.split(",");
     },
   },
   watch:{
-    // 检测用户的三个输入
-    // idName(oldVlaue,newValue){
-    //   let regxm = /^[\u4E00-\u9FA5]{2,4}$/;
-    //   if (this.people.idName ==="") {
-    //     this.idNameNo = true;
-    //   }else if(!regxm.test(this.people.idName)){
-    //     // this.idNameTest ="姓名不能含有非法字符！";
-    //     this.idNameNo = true;
-    //     // this.idName = "";
-    //   }else {
-    //     this.idNameNo = false;
-    //   }
+    // 检测错误
+    people(val){
+      // console.log(val);
+      let idnamereg = /^[\u4E00-\u9FA5]{2,4}$/;
+      let phonereg  = /^1[3456789]\d{9}$/;
+      let idreg =  /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;  
       
-    // },
-    // phoneNumber(value){
-    //    if(!(/^1[3456789]\d{9}$/.test(this.people.phoneNumber))){ 
-    //     // this.phoneNumberTest = "手机号有误，请重填！";
-    //     this.phoneNumberNo = true;        
-    //     // this.phoneNumber = "";
-    //   }else {
-    //     this.phoneNumberNo = false; 
-    //   }
-    // },
-    // idNumber(value){
-    //   let reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;  
-    //    if(reg.test(this.people.idNumber) === false)  {  
-    //         this.idNumberNo = true;
-    //     }else {
+      if ( null !== this.people.name && !(idnamereg.test(this.people.name))){
 
-    //       this.idNumberNo = false;
-    //     }  
-    // },
+          this.isError = "请正确填写联系人姓名";
+          this.$emit('isError',this.isError);
+
+      }else if (null !== this.people.mobile && !(phonereg.test(this.people.mobile))) {
+        this.isError = "请正确填写手机号";
+        this.$emit('isError',this.isError);
+      }else if ( null !== this.people.credentials && !idreg.test(this.people.credentials)) {
+        this.isError = "请正确填写身份证信息";
+        this.$emit('isError',this.isError);
+      }else {
+        this.isError == false;
+      }
+    },
   },
   beforeDestroy() {
     console.log("我要销毁了");
