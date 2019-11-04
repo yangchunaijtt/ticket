@@ -22,7 +22,7 @@ import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css'
 // 使用vue-cookies插件
 import VueCookies from 'vue-cookies'
-
+import AMap from 'vue-amap';
 // 使用vue-mobile-calendar时间
 import Calendar from 'vue-mobile-calendar'
 
@@ -43,12 +43,9 @@ Vue.use(VueLazyload,{
 })
 // vue左右滑动插件
 Vue.use(VueTouch, {name: 'v-touch'})
-
 Vue.component('icon', Icon)
-
-
-
 Vue.use(MintUI);
+Vue.use(AMap);
 
 Vue.prototype.$axios = axios;
 Vue.prototype.qs = QS;
@@ -82,6 +79,14 @@ store.registerModule("vux", {
       });
     }
   }
+});
+
+// 初始化vue-amap
+AMap.initAMapApiLoader({
+  // 高德key
+  key: '5eeab4fb86fdb2ea40bb70b720de1927',
+  // 插件集合 （插件按需引入）
+  plugin: ['AMap.Geolocation']
 });
 
 /* eslint-disable no-new */

@@ -21,7 +21,7 @@
           </div>
           <div class="rightitem" :style="{'height':rightitemHeight+'px'}">
             <div v-for="(item,index) in cityData" :key="index" class="itemname" @click="moveScroll(index)">
-              <p class="text" :class="index===scrollIndex?'on':'off'">
+              <p class="text" :class="[index===scrollIndex?'on':'off',isscroll?'off':'']">
                 {{item.name}}
               </p>
             </div>
@@ -1962,7 +1962,7 @@ export default {
       ],
       // 滑动插件需要的数据
       scrollIndex:0,  // 目前滑动所在的地方
-
+      isscroll:false,
     };
   },
   methods: {
@@ -1971,13 +1971,16 @@ export default {
     },  
     // 滑动监控的方法
     scrollListener:function(){  //监听滑动事件
+        
         this.box = this.$refs.viewBox
         this.box.addEventListener('scroll', () => {
             // console.log(this.$refs.viewBox.scrollTop)
+            // this.isscroll = true ;
         }, false)
       //  this.$refs.viewBox.scrollTop = 1300
     },
     moveScroll(index){
+      
       this.scrollIndex = index;
       let topNumber = 0;
       for ( let i = 0;i<this.cityData.length;i++){

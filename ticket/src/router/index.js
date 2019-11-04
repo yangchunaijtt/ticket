@@ -19,6 +19,7 @@ import orderlist from "@/components/orderlist/orderlist"
 import orderdetails from "@/components/orderdetails/orderdetails"
 import ordertime from "@/components/ordertime/ordertime"
 import pay from "@/components/pay/pay.vue"
+import map from "@/components/map/map.vue"
 
 Vue.use(Router)
 
@@ -83,6 +84,11 @@ const router = new Router({
       path: "/pay",
       name: "pay",
       component: pay
+    },
+    {
+      path:"/map",
+      name:'map',
+      component:map
     },
   ]
 })
