@@ -73,6 +73,8 @@ Lodash 的模块化方法 非常适用于：
 十：高德地图的使用
 1：vue使用高德地图
 https://www.cnblogs.com/0915ty/p/9554213.html
+2:定位问题
+https://blog.csdn.net/weixin_42414668/article/details/89705276
 
 十一：vue-svg-icon
 1：专门设置svg变成icon的。
@@ -80,6 +82,12 @@ https://www.cnblogs.com/0915ty/p/9554213.html
 
 十二：vant 
 1:https://youzan.github.io/vant-weapp/#/field
+
+
+十三：vue-amap
+1：使用介紹文章
+https://blog.csdn.net/qq_36111804/article/details/80816144
+
 
 代码注意部分
 1：v-for需要绑定下keys，来提高效率 

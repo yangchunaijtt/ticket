@@ -2,15 +2,30 @@
   <div class="map">
     <div class="header">
       <i class="returnleft iconfont iconzuo" @click="returnleft"></i>
-      <span class="text">查看位置</span>
+      <span class="text">{{placename}}</span>
     </div>
     <div class="center" :style="{width:'100%',height:rightitemHeight+'px'}">
-      <el-amap  
-        vid="amapDemo"  
+      <el-amap class="amap-box" vid="map" 
+        :zoom="zoom"
         :center="center"
-        :zoom="zoom"  
-        class="amap-demo"
+        :plugin="plugin"
         :events="events">
+         <el-amap-marker vid="marker" 
+          :position="center" 
+          :label="label"
+           >
+        </el-amap-marker>
+        <el-amap-circle  vid="circle"
+          :center="center" 
+          :radius="radius" 
+          fill-opacity="0.2"
+          strokeColor="#38f"
+          strokeOpacity="0.8"
+          strokeWeight="1"
+          fillColor="#38f"
+          >
+        </el-amap-circle>
+
       </el-amap>
     </div>
   </div>
@@ -24,42 +39,82 @@ import {Toast,} from "vant"
 export default {
 
   name:"map",
-  // props:{
-  //   longitude:{ //经度：例：119.997961519
-  //     type:Number, 
-  //     default:119.58,
-  //   },
-  //   latitude:{  //纬度 ：例：31.826120601
-  //     type:Number, 
-  //     default:31.47,
-  //   },
-  // },
   components:{
 
   },
    data(){
-    const self = this;
+    let vm = this;
     return {
-      
-      center: [121.59996, 31.197646],
+      place:"", //搜索的地址名
+      center:[119.58,31.47],
       lng: 0,
       lat: 0,
+      loaded:false,
       zoom:13,
-      loaded: false,
-      plugin: [{
-        // 
-        events: {
-         
+      label:{
+        content:this.placename,
+        offset:[10,12]
+      },
+      radius:100,
+      plugin: [
+        {
+          pName: 'ToolBar',//工具条插件
+          position:'LB',
         },
-      }]
-    }
+        {
+          pName: 'MapType',//卫星与地图切换
+          defaultType: 0,
+          showTraffic:true,//实时交通图层
+        },
+        {
+          pName:'OverView',
+          //isOpen:true//鹰眼是否打开
+        },
+        {
+          pName:'Scale'
+        },
+      ],
+      events: {
+        init(map) {
+          // 这里通过高德 SDK 完成。
+          var geocoder = new AMap.Geocoder({
+            radius: 1000,
+            extensions: "all",
+            city: "全国"
+          });
+          geocoder.getLocation(vm.place, (status, result) => {
+            if (status === "complete" && result.geocodes.length) {
+              let lnglat = result.geocodes[0].location
+              vm.lng = lnglat.lng;
+              vm.lat = lnglat.lat;
+              vm.center = [vm.lng, vm.lat];
+            }
+          });
+        }
+      },
+    };
   },
   created(){
-    
+    this.place = this.$utils.getUrlKey("place");
   },
   computed:{
     rightitemHeight(){
       return document.body.offsetHeight - 45;
+    },
+    placename(){
+      //江苏省常州市新北区环球恐龙城河海东路60号
+      let placename = this.place;
+      if (  placename.indexOf("江苏省") !== -1) {
+         placename = this.place.replace("江苏省","");
+      }
+       if ( placename.indexOf("常州市") !== -1 ) {
+        placename =  placename.replace('常州市',"");
+      }
+       if (  placename.indexOf("区") !== -1 ){
+        placename = placename.split("区")[1];
+      }
+
+      return placename;
     },
   },
   methods:{
@@ -68,7 +123,9 @@ export default {
       this.$router.go(-1);
     },
     // 其他
-
+    addRadius(){
+      this.radius+=10;
+    },
   },
   mounted() {
     
@@ -120,6 +177,10 @@ export default {
         color: #38f
         font-weight: 545
         font-size: 18px
+        overflow: hidden
+        text-overflow:ellipsis
+        white-space: nowrap
+        text-indent:0
     .center
       padding-top:45px 
 </style>

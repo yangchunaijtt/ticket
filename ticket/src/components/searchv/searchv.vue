@@ -89,7 +89,7 @@ export default {
       top:0 
       left:0 
       width:100%
-      height:40px
+      height:45px
       background:#fff
       .header
         position:relative

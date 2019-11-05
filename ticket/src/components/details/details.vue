@@ -18,7 +18,7 @@
     <div class="content">
       <div class="viewsport">
         <h2 class="name">{{detailsGetData.productName}}</h2>
-        <router-link to="" class="addressName">
+        <router-link :to="{path:'/map',query:{place:detailsGetData.scenicInfos.placeToAddr}}" class="addressName">
           <i class="location iconfont iconlocation"></i>
           <span class="address">{{detailsGetData.scenicInfos.placeToAddr?detailsGetData.scenicInfos.placeToAddr:""}}</span>
           <i class="return iconfont iconyou3"></i>
