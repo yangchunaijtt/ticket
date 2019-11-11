@@ -18,11 +18,11 @@
     <div class="content">
       <div class="viewsport">
         <h2 class="name">{{detailsGetData.productName}}</h2>
-        <router-link :to="{path:'/map',query:{place:detailsGetData.scenicInfos.placeToAddr}}" class="addressName">
+        <div @click="handlenavigation(detailsGetData.scenicInfos.placeToAddr)" class="addressName">
           <i class="location iconfont iconlocation"></i>
           <span class="address">{{detailsGetData.scenicInfos.placeToAddr?detailsGetData.scenicInfos.placeToAddr:""}}</span>
           <i class="return iconfont iconyou3"></i>
-        </router-link>
+        </div>
         <div class="toknow">
           <div class="reserve">
             <router-link :to="{path:'/toknow',query:{id:searchId}}" class="reserveurl">
@@ -290,6 +290,14 @@ export default {
   methods:{
     returnLeft(){   // 返回上一页
        this.$router.go(-1);
+    },
+    // 地图效果
+    async handlenavigation(place) {
+      window.location.href = `https://apis.map.qq.com/uri/v1/search?keyword=${
+        this.detailsGetData.scenicInfos.placeToAddr
+      }&region=${
+        this.detailsGetData.scenicInfos.placeCity
+      }&referer=WE3BZ-OY7LD-IZW4M-PLRHU-SOMWH-MOFSI`;
     },
     //子组件点击向负组件提示值,并显示预订须知的内容，发送ajax内容。
     noticeAjax(data){

@@ -77,7 +77,7 @@ export default {
        this.$router.push({path:'/tour',query: {search:this.inputVal}})
     },
   },
- 
+  
 }
 </script>
 <style lang="stylus"  rel="stylesheet/stylus" scoped>

@@ -197,9 +197,18 @@ export default {
         `api/LvmamaScenicTickets/ProductLocalInfos/GetProductInfos/${id}`
       );
     },
-    handlenavigation(place) {
-      this.$router.push({path:"/map",query:{"place":place}});
-      console.log("到这里去",place);
+    async handlenavigation(place) {
+      Toast.loading({
+        mask: true,
+        message: "加载中..."
+      });
+      //导航
+      const productinfo_res = await this.getScinInfo(this.orderinfo.pid);
+      console.log("位置", productinfo_res.data.data.scenicInfos.placeCity);
+      Toast.clear();
+      window.location.href = `https://apis.map.qq.com/uri/v1/search?keyword=${place}&region=${
+        productinfo_res.data.data.scenicInfos.placeCity
+      }&referer=WE3BZ-OY7LD-IZW4M-PLRHU-SOMWH-MOFSI`;
     },
     getOrderCancel() {
       if (this.refundStatus != "申请退票") {

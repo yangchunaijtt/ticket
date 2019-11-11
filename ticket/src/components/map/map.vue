@@ -1,11 +1,11 @@
 <template>
-  <div class="map">
+  <div class="amap" ref="amap">
     <div class="header">
       <i class="returnleft iconfont iconzuo" @click="returnleft"></i>
       <span class="text">{{placename}}</span>
     </div>
     <div class="center" :style="{width:'100%',height:rightitemHeight+'px'}">
-      <el-amap class="amap-box" vid="map" 
+      <el-amap class="amap-box" vid="contamap" 
         :zoom="zoom"
         :center="center"
         :plugin="plugin"
@@ -33,12 +33,14 @@
 
 <script>
 
+import AMap from "vue-amap";
+
 import {Toast,} from "vant"
 
 
 export default {
 
-  name:"map",
+  name:"amap",
   components:{
 
   },
@@ -75,7 +77,7 @@ export default {
         },
       ],
       events: {
-        init(map) {
+        init(contamap) {
           // 这里通过高德 SDK 完成。
           var geocoder = new AMap.Geocoder({
             radius: 1000,
@@ -141,7 +143,7 @@ export default {
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>
-  .map
+  .amap
     width:100% 
     height:100% 
     .header
